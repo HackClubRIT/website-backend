@@ -4,6 +4,7 @@ services:
   app:
     build: .
     volumes:
-    - "./src:/app"
+    - "./app:/src/app"
+    - "./alembic:/src/alembic"
     ports:
     - "8000:80"

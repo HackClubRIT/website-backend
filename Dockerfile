@@ -7,7 +7,6 @@ RUN set -eux; \
 	chown -R postgres:postgres /var/lib/postgresql
 RUN mkdir -p /var/run/postgresql && chown -R postgres:postgres /var/run/postgresql && chmod 2777 /var/run/postgresql
 
-
 RUN apt-get update \
 && apt-get install -y --no-install-recommends postgresql build-essential libpq-dev python-psycopg2 gcc \
 && apt-get purge -y --auto-remove \
@@ -19,6 +18,7 @@ ENV DB_PASSWORD='password'
 ENV DB_NAME='hackclubdb'
 ENV DB_HOST='127.0.0.1'
 ENV DB_PORT='5432'
+ENV DATABASE_URL=postgresql://$DB_USER:$DB_PASSWORD@$DB_HOST:$DB_PORT/$DB_NAME
 
 # Create DB and User
 USER postgres
@@ -27,9 +27,11 @@ RUN  service postgresql start \
 && psql -c "CREATE DATABASE ${DB_NAME} WITH owner ${DB_USER} encoding 'utf-8'"
 USER root
 
-COPY ./src /app
+VOLUME ["/var/lib/postgresql"]
 
-WORKDIR /app
+COPY . ./src
+
+WORKDIR /src
 
 RUN pip install -r requirements.txt
 
