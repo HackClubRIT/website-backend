@@ -29,9 +29,6 @@ USER root
 
 COPY ./src /app
 
-# Sync changes
-VOLUME ./src /app
-
 WORKDIR /app
 
 RUN pip install -r requirements.txt
