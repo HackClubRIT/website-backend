@@ -18,3 +18,4 @@ uvloop==0.15.2
 watchgod==0.7
 pylint==2.7.4
 psycopg2-binary==2.8.6
+python-multipart==0.0.5

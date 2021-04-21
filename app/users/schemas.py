@@ -9,8 +9,8 @@ class UserBase(BaseModel):
     username: str
 
 
-class UserCreate(UserBase):
-    """User write serializer"""
+class UserWrite(UserBase):
+    """User write serializer(Can also be used for login)"""
     password: str
 
 
