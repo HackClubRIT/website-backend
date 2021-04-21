@@ -3,3 +3,4 @@ env
 Dockerfile
 .git
 docker-compose.yml
+scripts
