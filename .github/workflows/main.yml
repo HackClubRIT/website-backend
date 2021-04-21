@@ -24,4 +24,5 @@ jobs:
     steps:
       # Checks-out your repository under $GITHUB_WORKSPACE, so your job can access it
        - uses: actions/checkout@v2  
+       - run: "apt install -y python3-testresources"
        - run: "python3 -m pip install -r requirements.txt; pylint app"
