@@ -24,7 +24,4 @@ jobs:
     steps:
       # Checks-out your repository under $GITHUB_WORKSPACE, so your job can access it
        - uses: actions/checkout@v2  
-       - name: GitHub Action for pylint
-         uses: cclauss/GitHub-Action-for-pylint@0.7.0
-         with:
-           args: "pip install -r requirements.txt ; pylint **/*.py"
+       - run: "python3 pip install -r requirements.txt; pylint app"
