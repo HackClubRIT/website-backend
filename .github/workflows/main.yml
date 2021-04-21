@@ -24,9 +24,5 @@ jobs:
     steps:
       # Checks-out your repository under $GITHUB_WORKSPACE, so your job can access it
        - uses: actions/checkout@v2  
-       - name: Python Linter
-         uses: sunnysid3up/python-linter@master
-         with:
-           source: "app"
-           mypy-options: "--ignore-missing-imports --show-error-codes"
-           strict: "high"
+       - name: GitHub Action for pylint
+         uses: cclauss/GitHub-Action-for-pylint@0.7.0
