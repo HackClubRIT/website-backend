@@ -8,7 +8,7 @@ app = FastAPI()
 
 @app.get("/")
 def read_root():
-    return " sdfWodsfd"
+    return "Hello World"
 
 
 @app.post("/users/", response_model=schemas.User)

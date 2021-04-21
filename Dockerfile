@@ -1,5 +1,6 @@
 FROM python:3.8.1-slim
 
+# POSTGRES User Setup and Making dirs
 RUN set -eux; \
 	groupadd -r postgres --gid=999; \
 	useradd -r -g postgres --uid=999 --home-dir=/var/lib/postgresql --shell=/bin/bash postgres; \
