@@ -1,12 +1,11 @@
 """
 The endpoints for /user
 """
-from fastapi import Depends, HTTPException
+from fastapi import Depends, HTTPException, APIRouter
 from sqlalchemy.orm import Session
-from . import crud
 from app.dependancies import get_db
+from . import crud
 from .schemas import User, UserWrite
-from fastapi import APIRouter
 
 router = APIRouter(
     prefix="/user",
@@ -23,7 +22,7 @@ async def get_user(user_id: int, database: Session = Depends(get_db)):
     return db_user
 
 
-@router.post("/")
+@router.post("/", response_model=User)
 async def create_user(user: UserWrite, database: Session = Depends(get_db)):
     """Create a new user"""
     existing_user = crud.get_user_by_username(database=database, username=user.username)
@@ -34,4 +33,5 @@ async def create_user(user: UserWrite, database: Session = Depends(get_db)):
 
 @router.get("/login")
 def login(user: UserWrite, database: Session = Depends(get_db)):
+    """Login"""
     pass
