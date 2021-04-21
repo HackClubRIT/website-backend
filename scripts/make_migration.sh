@@ -1,5 +1,4 @@
-CONTAINER_NAME="hackclub_backend"
-
+export CONTAINER_NAME="hackclub_backend"
 if [ -z "$1" ]
 then
    echo "ERROR: Empty Message";

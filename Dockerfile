@@ -28,12 +28,12 @@ RUN  service postgresql start \
 && psql -c "CREATE DATABASE ${DB_NAME} WITH owner ${DB_USER} encoding 'utf-8'"
 USER root
 
-VOLUME ["/var/lib/postgresql"]
-
 COPY . ./src
 
 WORKDIR /src
 
 RUN pip install -r requirements.txt
+
+VOLUME ["/var/lib/postgresql"]
 
 ENTRYPOINT ["./startserver.sh"]

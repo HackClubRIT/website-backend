@@ -1,9 +1,15 @@
+"""
+Common methods
+"""
 from app.database import SessionLocal
 
 
 def get_db():
-    db = SessionLocal()
+    """
+    Get the current db session
+    """
+    database = SessionLocal()
     try:
-        yield db
+        yield database
     finally:
-        db.close()
+        database.close()
