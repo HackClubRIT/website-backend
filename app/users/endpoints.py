@@ -14,7 +14,7 @@ from .utils import authenticate_user, create_access_token
 
 router = APIRouter(
     prefix="/auth",
-    tags=["user"],
+    tags=["authentication"],
 )
 
 
@@ -54,17 +54,16 @@ def update_user_partial(user_id: int, new_user_data: UserUpdate,
     raise HTTPException(status_code=403, detail=USER_FORBIDDEN)
 
 
-@router.delete("/user/{user_id}")
+@router.delete("/user/{user_id}", status_code=204)
 def delete_user(user_id: int,
                 current_user: UserInDB = Depends(get_current_user),
                 database: Session = Depends(get_db)):
     """Delete User Endpoint"""
-    if current_user.id == user_id:
-        if crud.delete_user(database, user_id):
-            return Response(status_code=204, description="")
+    if current_user.id != user_id:
+        raise HTTPException(status_code=403, detail=USER_FORBIDDEN)
+    if not crud.delete_user(database, user_id):
         # If the current user is not in db(For Some Reason)
         raise HTTPException(status_code=500, detail=INTERNAL_SERVER_ERROR)
-    raise HTTPException(status_code=403, detail=USER_FORBIDDEN)
 
 
 @router.post("/token", response_model=Token)

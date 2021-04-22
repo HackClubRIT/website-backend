@@ -22,6 +22,13 @@ def verify_password(user, password):
     return pwd_context.verify(password, user.password)
 
 
+def _commit_changes_to_object(database, user_obj):
+    """Finish the database transaction and refresh session"""
+    database.add(user_obj)
+    database.commit()
+    database.refresh(user_obj)
+
+
 def get_user(database: Session, user_id: int):
     """Get User By ID"""
     return database.query(models.User).filter(models.User.id == user_id,
@@ -37,9 +44,7 @@ def get_user_by_username(database: Session, username: str):
 def create_user(database: Session, user: schemas.UserCreate):
     """Create User"""
     db_user = models.User(username=user.username, password=hash_password(user.password))
-    database.add(db_user)
-    database.commit()
-    database.refresh(db_user)
+    _commit_changes_to_object(database, db_user)
     return db_user
 
 
@@ -56,9 +61,7 @@ def update_user(database: Session, user_updated: schemas.UserUpdate, user_id: in
         if value:
             setattr(db_user, var, value)
 
-    database.add(db_user)
-    database.commit()
-    database.refresh(db_user)
+    _commit_changes_to_object(database, db_user)
     return db_user
 
 
@@ -69,9 +72,7 @@ def delete_user(database: Session, user_id: int):
     """
     db_user = get_user(database, user_id)
     if db_user:
-        setattr(db_user, "is_active", False)
-        database.add(db_user)
-        database.commit()
-        database.refresh(db_user)
+        db_user.is_active = False
+        _commit_changes_to_object(database, db_user)
         return True
     return None
