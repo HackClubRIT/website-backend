@@ -1,6 +1,9 @@
 """
 CRUD the user table & hashing passwords
 """
+# Disabled as it will cause errors with boolean field comparison
+# pylint: disable=singleton-comparison
+
 from sqlalchemy.orm import Session
 from passlib.context import CryptContext
 from . import models, schemas

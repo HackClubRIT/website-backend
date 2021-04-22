@@ -3,7 +3,6 @@ The endpoints for /user
 """
 from datetime import timedelta
 from fastapi import Depends, HTTPException, APIRouter, status
-from fastapi.openapi.models import Response
 from fastapi.security import OAuth2PasswordRequestForm
 from sqlalchemy.orm import Session
 from app.exception_response_body import INTERNAL_SERVER_ERROR, USER_FORBIDDEN
@@ -46,7 +45,9 @@ def update_user_partial(user_id: int, new_user_data: UserUpdate,
                 crud.get_user_by_username(database=database, username=new_user_data.username):
             raise HTTPException(status_code=400, detail="Username already taken")
 
-        new_user_from_db = crud.update_user(database=database, user_updated=new_user_data, user_id=user_id)
+        new_user_from_db = crud.update_user(database=database,
+                                            user_updated=new_user_data,
+                                            user_id=user_id)
         if new_user_from_db:
             return new_user_from_db
         # If the current user is not in db(For Some Reason)
