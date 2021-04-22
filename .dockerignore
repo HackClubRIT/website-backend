@@ -4,3 +4,5 @@ Dockerfile
 .git
 docker-compose.yml
 scripts
+db-data
+.github

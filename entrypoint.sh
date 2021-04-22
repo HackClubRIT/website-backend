@@ -1,5 +1,4 @@
 #!/bin/bash
-service postgresql start
 # Migrate
 alembic upgrade head
 # Run
