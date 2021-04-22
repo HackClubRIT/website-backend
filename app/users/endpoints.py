@@ -42,7 +42,11 @@ def update_user_partial(user_id: int, new_user_data: UserUpdate,
     if current_user.id == user_id:
         update_data = new_user_data.dict(exclude_unset=True)
         updated_user = UserUpdate(**current_user.copy(update=update_data).dict())
-        return crud.update_user(database=database, user=updated_user, user_id=user_id)
+        new_user_from_db = crud.update_user(database=database, user=updated_user, user_id=user_id)
+        if new_user_from_db:
+            return new_user_from_db
+        # If the current user is not in db(For Some Reason)
+        raise HTTPException(status_code=500, detail="Something is wrong, please try again later")
     raise HTTPException(status_code=403, detail="Not Allowed")
 
 

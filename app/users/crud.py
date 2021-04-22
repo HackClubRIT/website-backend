@@ -1,22 +1,25 @@
 """
-CRUD the user table
+CRUD the user table & hashing passwords
 """
 from sqlalchemy.orm import Session
+from passlib.context import CryptContext
 from . import models, schemas
+
+pwd_context = CryptContext(schemes=["bcrypt"], deprecated="auto")
 
 
 def hash_password(password):
     """Hash the password"""
-    # TODO
-    return password
+    return pwd_context.hash(password)
 
 
 def verify_password(user, password):
     """
     verify password is correct
     :param user: Model User
+    :param password: Plaintext password
     """
-    return hash_password(password) == user.password
+    return pwd_context.verify(password, user.password)
 
 
 def get_user(database: Session, user_id: int):
@@ -42,8 +45,7 @@ def update_user(database: Session, user: schemas.UserUpdate, user_id: int):
     """Update User"""
     db_user = get_user(database, user_id)
     if db_user is None:
-        # TODO
-        pass
+        return None
     if getattr(user, "password"):
         user.password = hash_password(user.password)
 
