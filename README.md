@@ -18,11 +18,21 @@ docker-compose -v
 ## Running Migrations
 Make migrations using
 
-`$ sh ./scripts/make_migrations.sh`
+```
+source scripts/make_migrations.sh
+```
 
 Migrate the database using
 
-`$ sh ./scripts/migrate.sh`
+```
+source scripts/migrate.sh
+```
+
+## Run pylint
+
+```
+source scripts/lint.sh
+```
 
 ### Setting up docker remote interpreter for PyCharm IDE
 Checkout this [blog](https://blog.jetbrains.com/pycharm/2015/12/using-docker-in-pycharm/), to allow code inspections by the IDE without installing any packages.
