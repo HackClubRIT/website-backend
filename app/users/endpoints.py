@@ -3,8 +3,10 @@ The endpoints for /user
 """
 from datetime import timedelta
 from fastapi import Depends, HTTPException, APIRouter, status
+from fastapi.openapi.models import Response
 from fastapi.security import OAuth2PasswordRequestForm
 from sqlalchemy.orm import Session
+from app.exception_response_body import INTERNAL_SERVER_ERROR, USER_FORBIDDEN
 from app.dependancies import get_db, JWT_ACCESS_TOKEN_EXPIRE_MINUTES, get_current_user
 from . import crud
 from .schemas import User, UserCreate, Token, UserUpdate, UserInDB
@@ -25,7 +27,7 @@ def get_user(user_id: int, database: Session = Depends(get_db)):
     return db_user
 
 
-@router.post("/user", response_model=User)
+@router.post("/user", response_model=User, status_code=201)
 def create_user(user: UserCreate, database: Session = Depends(get_db)):
     """Create a new user"""
     existing_user = crud.get_user_by_username(database=database, username=user.username)
@@ -40,14 +42,29 @@ def update_user_partial(user_id: int, new_user_data: UserUpdate,
                         database: Session = Depends(get_db)):
     """Update User EndPoint"""
     if current_user.id == user_id:
-        update_data = new_user_data.dict(exclude_unset=True)
-        updated_user = UserUpdate(**current_user.copy(update=update_data).dict())
-        new_user_from_db = crud.update_user(database=database, user=updated_user, user_id=user_id)
+        if hasattr(new_user_data, "username") and \
+                crud.get_user_by_username(database=database, username=new_user_data.username):
+            raise HTTPException(status_code=400, detail="Username already taken")
+
+        new_user_from_db = crud.update_user(database=database, user_updated=new_user_data, user_id=user_id)
         if new_user_from_db:
             return new_user_from_db
         # If the current user is not in db(For Some Reason)
-        raise HTTPException(status_code=500, detail="Something is wrong, please try again later")
-    raise HTTPException(status_code=403, detail="Not Allowed")
+        raise HTTPException(status_code=500, detail=INTERNAL_SERVER_ERROR)
+    raise HTTPException(status_code=403, detail=USER_FORBIDDEN)
+
+
+@router.delete("/user/{user_id}")
+def delete_user(user_id: int,
+                current_user: UserInDB = Depends(get_current_user),
+                database: Session = Depends(get_db)):
+    """Delete User Endpoint"""
+    if current_user.id == user_id:
+        if crud.delete_user(database, user_id):
+            return Response(status_code=204, description="")
+        # If the current user is not in db(For Some Reason)
+        raise HTTPException(status_code=500, detail=INTERNAL_SERVER_ERROR)
+    raise HTTPException(status_code=403, detail=USER_FORBIDDEN)
 
 
 @router.post("/token", response_model=Token)
