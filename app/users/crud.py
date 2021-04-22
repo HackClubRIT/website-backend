@@ -50,7 +50,8 @@ def update_user(database: Session, user: schemas.UserUpdate, user_id: int):
         user.password = hash_password(user.password)
 
     for var, value in vars(user).items():
-        setattr(db_user, var, value) if value else None
+        if value:
+            setattr(db_user, var, value)
 
     database.add(db_user)
     database.commit()
