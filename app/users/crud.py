@@ -38,8 +38,13 @@ def get_user(database: Session, user_id: int):
                                               models.User.is_active == True).first()
 
 
-def get_user_by_username(database: Session, username: str):
-    """Get User By Username"""
+def get_user_by_username(database: Session, username: str, all_users=False):
+    """
+    Get User By Username
+    :param all_users: check all users in db including inactive ones
+    """
+    if all_users:
+        return database.query(models.User).filter(models.User.username == username).first()
     return database.query(models.User).filter(models.User.username == username,
                                               models.User.is_active == True).first()
 

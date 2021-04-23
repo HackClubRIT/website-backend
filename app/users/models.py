@@ -1,8 +1,9 @@
 """
 Define db tables
 """
-from sqlalchemy import Column, String, Boolean, Integer
+from sqlalchemy import Column, String, Boolean, Integer, Enum
 from app.database import Base
+from app.users.roles import Roles
 
 
 class User(Base):
@@ -12,3 +13,4 @@ class User(Base):
     username = Column(String, unique=True)
     password = Column(String)
     is_active = Column(Boolean, default=True)
+    role = Column(Enum(Roles), default=Roles.user)

@@ -29,7 +29,7 @@ def get_user(user_id: int, database: Session = Depends(get_db)):
 @router.post("/user", response_model=User, status_code=201)
 def create_user(user: UserCreate, database: Session = Depends(get_db)):
     """Create a new user"""
-    existing_user = crud.get_user_by_username(database=database, username=user.username)
+    existing_user = crud.get_user_by_username(database=database, username=user.username, all_users=True)
     if existing_user:
         raise HTTPException(status_code=400, detail="Username already taken")
     return crud.create_user(user=user, database=database)
