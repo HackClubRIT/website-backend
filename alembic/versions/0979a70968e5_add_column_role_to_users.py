@@ -24,7 +24,7 @@ def upgrade():
 
     op.add_column(
         "users",
-        sa.Column("role", roles, nullable=False, default=Roles.user.value, server_default=Roles.user.value)
+        sa.Column("role", roles, nullable=False, default=Roles.USER.value, server_default=Roles.USER.value)
     )
 
 

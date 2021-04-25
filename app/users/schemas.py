@@ -11,6 +11,7 @@ from app.users.roles import Roles
 class UserBase(BaseModel):
     """Base serializer"""
     username: str
+    role: Roles
 
 
 class UserCreate(UserBase):
@@ -28,7 +29,6 @@ class User(UserBase):
     """User read serializer(ORM)"""
     id: int
     is_active: bool
-    role: Roles
 
     class Config:
         """Enable ORM"""

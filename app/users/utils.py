@@ -23,6 +23,6 @@ def create_access_token(data: dict, expires_delta: Optional[timedelta] = None):
 def authenticate_user(database, username, password):
     """Using username and password"""
     user = get_user_by_username(database, username)
-    if verify_password(user, password):
+    if user and verify_password(user, password):
         return user
     return None

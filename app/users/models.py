@@ -13,4 +13,4 @@ class User(Base):
     username = Column(String, unique=True)
     password = Column(String)
     is_active = Column(Boolean, default=True)
-    role = Column(Enum(Roles), default=Roles.user)
+    role = Column(Enum(Roles), default=Roles.USER)

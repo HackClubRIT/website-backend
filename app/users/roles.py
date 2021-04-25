@@ -2,14 +2,17 @@ from enum import Enum
 
 
 class Roles(Enum):
-    """The role enum"""
-    admin = "admin"
-    moderator = "moderator"
-    user = "user"
+    """
+    The role enum
+    WARNING: Don't change values unnecessarily as this enum is directly tied to migration '0979a70968e5'
+    """
+    ADMIN = "ADMIN"
+    MODERATOR = "MODERATOR"
+    USER = "USER"
 
 
 hierarchy = {
-    Roles.admin: 0,
-    Roles.moderator: 1,
-    Roles.user: 2
+    Roles.ADMIN: 2,
+    Roles.MODERATOR: 1,
+    Roles.USER: 0
 }

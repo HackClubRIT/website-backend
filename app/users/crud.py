@@ -50,8 +50,11 @@ def get_user_by_username(database: Session, username: str, all_users=False):
 
 
 def create_user(database: Session, user: schemas.UserCreate):
-    """Create User"""
-    db_user = models.User(username=user.username, password=hash_password(user.password))
+    """
+    Create User
+    Development Only
+    """
+    db_user = models.User(username=user.username, password=hash_password(user.password), role=user.role)
     _commit_changes_to_object(database, db_user)
     return db_user
 
