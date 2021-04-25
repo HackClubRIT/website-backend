@@ -5,10 +5,13 @@ from typing import Optional
 
 from pydantic import BaseModel
 
+from app.users.roles import Roles
+
 
 class UserBase(BaseModel):
     """Base serializer"""
     username: str
+    role: Roles
 
 
 class UserCreate(UserBase):
