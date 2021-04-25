@@ -5,7 +5,7 @@ from datetime import timedelta
 from fastapi import Depends, HTTPException, APIRouter, status
 from fastapi.security import OAuth2PasswordRequestForm
 from sqlalchemy.orm import Session
-from app.exception_response_body import INTERNAL_SERVER_ERROR, USER_FORBIDDEN
+from app.exception_response_body import USER_FORBIDDEN
 from app.dependancies import get_db, JWT_ACCESS_TOKEN_EXPIRE_MINUTES, get_current_user
 from . import crud
 from .role_mock_middleware import is_admin
@@ -49,12 +49,19 @@ def update_user_partial(user_id: int, new_user_data: UserUpdate,
     if current_user.id == user_id or is_admin(current_user):
 
         if hasattr(new_user_data, "username"):
-            same_username_user = crud.get_user_by_username(database=database, username=new_user_data.username)
+            same_username_user = crud.get_user_by_username(
+                database=database,
+                username=new_user_data.username
+            )
             if same_username_user and same_username_user.id != user_id:
                 # Verify that there really exists another user with the same username
                 raise HTTPException(status_code=400, detail="Username already taken")
 
-        new_user_from_db = crud.update_user(database=database, user_updated=new_user_data, user_id=user_id)
+        new_user_from_db = crud.update_user(
+            database=database,
+            user_updated=new_user_data,
+            user_id=user_id
+        )
 
         if new_user_from_db:
             return new_user_from_db
@@ -91,4 +98,3 @@ def login_for_access_token(database: Session = Depends(get_db),
         data={"sub": user.username}, expires_delta=access_token_expires
     )
     return {"access_token": access_token, "token_type": "bearer"}
-
