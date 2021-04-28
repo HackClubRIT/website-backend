@@ -1,3 +1,7 @@
+"""
+App Settings
+"""
+
 import os
 
 JWT_HASH_ALGORITHM = "HS256"

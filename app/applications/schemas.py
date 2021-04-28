@@ -1,6 +1,7 @@
 """
 Application Serializers
 """
+# pylint: disable=no-self-argument,no-self-use
 import datetime
 from pydantic import BaseModel, validator
 from app.applications.application_states import ApplicationStates
@@ -15,12 +16,22 @@ class ApplicationBase(BaseModel):
 
     @validator("email")
     def is_valid_email(cls, email):
-        assert email_validator(email) is not None
+        """
+        Validate Email
+        :raise AssertionError
+        """
+        if email_validator(email) is None:
+            raise AssertionError("Invalid Email")
         return email
 
     @validator("name")
     def is_valid_name(cls, name):
-        assert name_validator(name) is not None
+        """
+        Validate Name
+        :raise AssertionError
+        """
+        if name_validator(name) is None:
+            raise AssertionError("Name contains invalid characters")
         return name
 
 

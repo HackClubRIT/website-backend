@@ -1,5 +1,5 @@
 """
-Common methods
+Dependencies
 """
 from fastapi import Depends, HTTPException, status
 from fastapi.security import OAuth2PasswordBearer
@@ -8,6 +8,7 @@ from jose import JWTError, jwt
 from app.users.schemas import TokenData, UserInDB
 from app.database import SessionLocal
 from app.users.crud import get_user_by_username
+from app.settings import SECRET_KEY, JWT_HASH_ALGORITHM
 
 oauth2_scheme = OAuth2PasswordBearer(tokenUrl="/auth/token")
 
