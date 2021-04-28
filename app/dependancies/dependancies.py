@@ -1,7 +1,6 @@
 """
 Common methods
 """
-import os
 from fastapi import Depends, HTTPException, status
 from fastapi.security import OAuth2PasswordBearer
 from sqlalchemy.orm import Session
@@ -9,12 +8,6 @@ from jose import JWTError, jwt
 from app.users.schemas import TokenData, UserInDB
 from app.database import SessionLocal
 from app.users.crud import get_user_by_username
-
-JWT_HASH_ALGORITHM = "HS256"
-
-JWT_ACCESS_TOKEN_EXPIRE_MINUTES = 60 * 24
-
-SECRET_KEY = os.environ.get("SECRET_KEY")
 
 oauth2_scheme = OAuth2PasswordBearer(tokenUrl="/auth/token")
 

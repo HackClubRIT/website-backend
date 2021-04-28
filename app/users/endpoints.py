@@ -6,7 +6,8 @@ from fastapi import Depends, HTTPException, APIRouter, status
 from fastapi.security import OAuth2PasswordRequestForm
 from sqlalchemy.orm import Session
 from app.exception_response_body import USER_FORBIDDEN
-from app.dependancies import get_db, JWT_ACCESS_TOKEN_EXPIRE_MINUTES, get_current_user
+from app.dependancies import get_db, get_current_user
+from app.settings import JWT_ACCESS_TOKEN_EXPIRE_MINUTES
 from . import crud
 from .role_mock_middleware import is_admin
 from .schemas import User, UserCreate, Token, UserUpdate, UserInDB

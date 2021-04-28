@@ -4,7 +4,7 @@ Common utils for user Module
 from datetime import datetime, timedelta
 from typing import Optional
 from jose import jwt
-from app.dependancies import SECRET_KEY, JWT_HASH_ALGORITHM
+from app.settings import SECRET_KEY, JWT_HASH_ALGORITHM
 from .crud import get_user_by_username, verify_password
 
 

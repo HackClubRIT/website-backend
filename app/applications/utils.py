@@ -11,8 +11,9 @@ def create_user_from_application(database: Session, application):
     """Create user after application has been approved"""
     user = UserCreate(
         role=Roles.USER,
-        password="password",
-        username=application.email
+        password=application.email,
+        username=application.email,
+        name=application.name
     )
 
     user_crud.create_user(database=database, user=user)

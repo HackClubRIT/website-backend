@@ -51,6 +51,7 @@ def create_user(database: Session, user: schemas.UserCreate):
     db_user = models.User(
         username=user.username,
         password=hash_password(user.password),
+        name=user.name,
         role=user.role
     )
     commit_changes_to_object(database, db_user)

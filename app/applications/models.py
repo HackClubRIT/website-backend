@@ -12,5 +12,6 @@ class Application(Base):
     id = Column(Integer, primary_key=True)
     created_date = Column(DateTime(timezone=True), default=func.now())
     email = Column(String)
+    name = Column(String)
     data = Column(JSON)
     status = Column(Enum(ApplicationStates), default=ApplicationStates.PENDING)

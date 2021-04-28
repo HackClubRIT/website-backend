@@ -29,7 +29,11 @@ def get_latest_application_by_email(database: Session, email: str):
 
 def create_application(database: Session, application: ApplicationBase):
     """Create new application"""
-    db_application = models.Application(data=application.data, email=application.email)
+    db_application = models.Application(
+        data=application.data,
+        email=application.email,
+        name=application.name
+    )
     commit_changes_to_object(database=database, obj=db_application)
     return db_application
 

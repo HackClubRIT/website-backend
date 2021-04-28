@@ -7,7 +7,6 @@ Create Date: 2021-04-27 14:12:23.945564
 """
 from alembic import op
 import sqlalchemy as sa
-from sqlalchemy.dialects import postgresql
 from app.applications.application_states import ApplicationStates
 
 revision = 'c475fe148716'
@@ -28,10 +27,11 @@ def upgrade():
         sa.Column("email", sa.String, nullable=False),
         sa.Column("created_date", sa.DateTime, server_default=sa.func.now()),
         sa.Column("data", sa.JSON, nullable=False),
-        sa.Column("status", sa.String, default=ApplicationStates.PENDING.value, server_default=ApplicationStates.PENDING.value)
+        sa.Column("status", sa.String, default=ApplicationStates.PENDING.value, server_default=ApplicationStates.PENDING.value),
+        sa.Column("name", sa.String, nullable=False)
     )
 
 
 def downgrade():
-    #op.drop_table("applications")
-    sa.Enum(name='app_status').drop(op.get_bind(), checkfirst=False)
+    op.drop_table("applications")
+    #sa.Enum(name='app_status').drop(op.get_bind(), checkfirst=False)
