@@ -1,0 +1,89 @@
+import datetime
+from typing import List
+from fastapi import APIRouter, Depends, HTTPException
+from sqlalchemy.orm import Session
+
+from . import crud
+from app.applications.schemas import ApplicationRead, ApplicationCreate, ApplicationUpdate
+from app.dependancies import get_db, get_current_user
+from app.users.roles import Roles
+from app.exception_response_body import USER_FORBIDDEN
+from app.users.role_mock_middleware import is_at_least_role
+from app.users import crud as user_crud
+from .application_states import ApplicationStates
+from .utils import create_user_from_application
+from ..users.schemas import UserInDB
+
+router = APIRouter(
+    prefix="/application",
+    tags=["Application"],
+)
+
+min_view_role = Roles.MODERATOR
+min_update_role = Roles.ADMIN
+
+
+@router.get("/", response_model=List[ApplicationRead])
+def view_all_pending_applications(database: Session = Depends(get_db),
+                                  current_user: UserInDB = Depends(get_current_user)):
+    """View all pending applications"""
+    if is_at_least_role(current_user=current_user, role=min_view_role):
+        return crud.get_pending_applications(database)
+
+
+@router.get("/{application_id}", response_model=ApplicationRead)
+def view_application(application_id: int, database: Session = Depends(get_db),
+                     current_user: UserInDB = Depends(get_current_user)):
+    """#View an application"""
+    if is_at_least_role(current_user=current_user, role=min_view_role):
+        return crud.get_application(database=database, application_id=application_id)
+
+
+@router.post("/", response_model=ApplicationRead)
+def create_application(application: ApplicationCreate, database: Session = Depends(get_db)):
+    """Create an application"""
+    min_application_difference = 7 * 24 * 60 * 60  # 1 week
+    last_application = crud.get_latest_application_by_email(database=database, email=application.email)
+    if last_application:
+        diff = (datetime.datetime.now() - last_application.created_date).total_seconds()
+
+        if last_application.status == ApplicationStates.APPROVED:
+            raise HTTPException(
+                status_code=400,
+                detail="Your last application has been approved, please check your mail"
+            )
+        if last_application.status == ApplicationStates.PENDING:
+            raise HTTPException(
+                status_code=400,
+                detail="Your last application is not yet reviewed, please wait until we review it"
+            )
+        if diff < min_application_difference:
+            raise HTTPException(
+                status_code=400,
+                detail="Please wait at least a week before submitting a new application"
+            )
+
+    return crud.create_application(database=database, application=application)
+
+
+@router.patch("/{application_id}")
+def update_application(
+        application_id: int,
+        data: ApplicationUpdate,
+        database: Session = Depends(get_db),
+        current_user: UserInDB = Depends(get_current_user)
+):
+    """Approve/Reject Application"""
+    approved_state_map = {True: ApplicationStates.APPROVED, False: ApplicationStates.REJECTED}
+    if is_at_least_role(current_user=current_user, role=min_update_role):
+        updated_application = crud.change_state_of_application(
+            database=database,
+            application_id=application_id,
+            new_state=approved_state_map[data.approved]
+        )
+        if updated_application:
+            if data.approved:
+                create_user_from_application(database=database, application=updated_application)
+            return updated_application
+        raise HTTPException(status_code=404, detail="Application not found")
+

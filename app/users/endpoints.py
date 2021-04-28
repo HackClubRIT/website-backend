@@ -1,5 +1,5 @@
 """
-The endpoints for /user
+The endpoints for /auth
 """
 from datetime import timedelta
 from fastapi import Depends, HTTPException, APIRouter, status
@@ -98,3 +98,4 @@ def login_for_access_token(database: Session = Depends(get_db),
         data={"sub": user.username}, expires_delta=access_token_expires
     )
     return {"access_token": access_token, "token_type": "bearer"}
+

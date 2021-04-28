@@ -7,6 +7,7 @@ CRUD the user table & hashing passwords
 from sqlalchemy.orm import Session
 from passlib.context import CryptContext
 from . import models, schemas
+from ..database.database import commit_changes_to_object
 
 pwd_context = CryptContext(schemes=["bcrypt"], deprecated="auto")
 
@@ -23,13 +24,6 @@ def verify_password(user, password):
     :param password: Plaintext password
     """
     return pwd_context.verify(password, user.password)
-
-
-def _commit_changes_to_object(database, user_obj):
-    """Finish the database transaction and refresh session"""
-    database.add(user_obj)
-    database.commit()
-    database.refresh(user_obj)
 
 
 def get_user(database: Session, user_id: int):
@@ -59,7 +53,7 @@ def create_user(database: Session, user: schemas.UserCreate):
         password=hash_password(user.password),
         role=user.role
     )
-    _commit_changes_to_object(database, db_user)
+    commit_changes_to_object(database, db_user)
     return db_user
 
 
@@ -76,7 +70,7 @@ def update_user(database: Session, user_updated: schemas.UserUpdate, user_id: in
         if value:
             setattr(db_user, var, value)
 
-    _commit_changes_to_object(database, db_user)
+    commit_changes_to_object(database, db_user)
     return db_user
 
 
@@ -88,6 +82,6 @@ def delete_user(database: Session, user_id: int):
     db_user = get_user(database, user_id)
     if db_user:
         db_user.is_active = False
-        _commit_changes_to_object(database, db_user)
+        commit_changes_to_object(database, db_user)
         return True
     return None
