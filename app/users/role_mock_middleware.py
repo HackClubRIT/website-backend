@@ -25,7 +25,7 @@ def is_at_least_role(role: Roles, current_user):
     Check if current_user.role >= role in the hierarchy
     :raises HTTPException 403 otherwise
     """
-    if hierarchy.get(current_user.role) >= hierarchy.get(role):
+    if hierarchy.get(current_user.role) < hierarchy.get(role):
         raise exception
     return True
 

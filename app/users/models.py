@@ -10,6 +10,7 @@ class User(Base):
     """The user model"""
     __tablename__ = "users"
     id = Column(Integer, primary_key=True)
+    name = Column(String)
     username = Column(String, unique=True)
     password = Column(String)
     is_active = Column(Boolean, default=True)

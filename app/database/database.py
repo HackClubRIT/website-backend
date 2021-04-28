@@ -13,3 +13,10 @@ engine = create_engine(SQLALCHEMY_DATABASE_URL)
 SessionLocal = sessionmaker(autocommit=False, autoflush=False, bind=engine)
 
 Base = declarative_base()
+
+
+def commit_changes_to_object(database, obj):
+    """Finish the database transaction and refresh session"""
+    database.add(obj)
+    database.commit()
+    database.refresh(obj)
