@@ -1,18 +1,19 @@
+"""
+Application Endpoints
+"""
+# pylint: disable=inconsistent-return-statements
 import datetime
 from typing import List
 from fastapi import APIRouter, Depends, HTTPException
 from sqlalchemy.orm import Session
-
-from . import crud
-from app.applications.schemas import ApplicationRead, ApplicationCreate, ApplicationUpdate
+from app.applications.schemas import ApplicationRead, ApplicationBase, ApplicationUpdate
 from app.dependancies import get_db, get_current_user
 from app.users.roles import Roles
-from app.exception_response_body import USER_FORBIDDEN
 from app.users.role_mock_middleware import is_at_least_role
-from app.users import crud as user_crud
+from app.users.schemas import UserInDB
+from . import crud
 from .application_states import ApplicationStates
 from .utils import create_user_from_application
-from ..users.schemas import UserInDB
 
 router = APIRouter(
     prefix="/application",
@@ -34,16 +35,19 @@ def view_all_pending_applications(database: Session = Depends(get_db),
 @router.get("/{application_id}", response_model=ApplicationRead)
 def view_application(application_id: int, database: Session = Depends(get_db),
                      current_user: UserInDB = Depends(get_current_user)):
-    """#View an application"""
+    """View an application"""
     if is_at_least_role(current_user=current_user, role=min_view_role):
         return crud.get_application(database=database, application_id=application_id)
 
 
 @router.post("/", response_model=ApplicationRead)
-def create_application(application: ApplicationCreate, database: Session = Depends(get_db)):
+def create_application(application: ApplicationBase, database: Session = Depends(get_db)):
     """Create an application"""
     min_application_difference = 7 * 24 * 60 * 60  # 1 week
-    last_application = crud.get_latest_application_by_email(database=database, email=application.email)
+    last_application = crud.get_latest_application_by_email(
+        database=database,
+        email=application.email
+    )
     if last_application:
         diff = (datetime.datetime.now() - last_application.created_date).total_seconds()
 
@@ -83,7 +87,9 @@ def update_application(
         )
         if updated_application:
             if data.approved:
-                create_user_from_application(database=database, application=updated_application)
+                create_user_from_application(
+                    database=database,
+                    application=updated_application
+                )
             return updated_application
         raise HTTPException(status_code=404, detail="Application not found")
-

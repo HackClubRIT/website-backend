@@ -1,3 +1,6 @@
+"""
+Application Serializers
+"""
 import datetime
 from pydantic import BaseModel
 
@@ -8,11 +11,6 @@ class ApplicationBase(BaseModel):
     """Base application serializer"""
     email: str
     data: dict
-
-
-class ApplicationCreate(ApplicationBase):
-    """Create serializer"""
-    pass
 
 
 class ApplicationUpdate(BaseModel):

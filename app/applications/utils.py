@@ -1,3 +1,6 @@
+"""
+Application Utils
+"""
 from sqlalchemy.orm import Session
 from app.users import crud as user_crud
 from app.users.roles import Roles

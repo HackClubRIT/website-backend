@@ -1,6 +1,9 @@
+"""
+Application Model
+"""
 from sqlalchemy import Column, String, Integer, func, DateTime, JSON, Enum
-from .application_states import ApplicationStates
 from app.database import Base
+from .application_states import ApplicationStates
 
 
 class Application(Base):
