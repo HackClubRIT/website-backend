@@ -12,7 +12,7 @@ from . import crud
 from .role_mock_middleware import is_admin
 from .schemas import User, UserCreate, Token, UserUpdate, UserInDB
 from .utils import authenticate_user, create_access_token
-
+from ..commons.mock_middleware import is_debug
 
 router = APIRouter(
     prefix="/auth",
@@ -32,6 +32,7 @@ def get_user(user_id: int, database: Session = Depends(get_db)):
 @router.post("/user", response_model=User, status_code=201)
 def create_user(user: UserCreate, database: Session = Depends(get_db)):
     """Create a new user"""
+    is_debug(status_code=405)
     existing_user = crud.get_user_by_username(
         database=database,
         username=user.username,
