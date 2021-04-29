@@ -1,14 +1,19 @@
 # HackClub Website Backend
 
 ## Table of Contents
-- ### [Requirements](#requirements)
-- ### [Running the app](#running-the-app)
-- ### [Running scripts inside container](#running-scripts)
-    - #### [Running Migrations](#running-migrations)
-    - #### [Running pylint](#run-pylint)
-- ### [Json Schemas](#json-schemas)
-- ### [Endpoints](#endpoints)
-- ### [PyCharm Docker Setup](#setting-up-docker-remote-interpreter-for-PyCharm-IDE)
+- #### [Requirements](#requirements)
+- #### [Running the app](#running-the-app)
+- #### [Running scripts inside container](#running-scripts)
+    - [Running Migrations](#running-migrations)
+    - [Running pylint](#run-pylint)
+- #### [Json Schemas](#json-schemas)
+    - [User Receive](#user-receive)
+    - [User Create](#user-create)
+    - [User Update](#user-update)
+    - [ApplicationView](#applicationview)
+    - [ApplicationCreate](#applicationcreate)
+- #### [Endpoints](#endpoints)
+- #### [PyCharm Docker Setup](#setting-up-docker-remote-interpreter-for-PyCharm-IDE)
 
 ## Requirements
 - Docker(With compose): Container tool
