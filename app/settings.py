@@ -2,8 +2,6 @@
 App Settings
 """
 import json
-
-from fastapi.middleware.cors import CORSMiddleware
 import os
 
 DEBUG = os.environ.get("DEBUG", "True") != "False"
@@ -16,7 +14,7 @@ SECRET_KEY = os.environ.get("SECRET_KEY")
 
 ALLOWED_ORIGINS = json.loads(os.environ.get("ALLOWED_ORIGINS", "[]"))
 
-assert type(ALLOWED_ORIGINS) is list
+assert isinstance(ALLOWED_ORIGINS, list)
 
 
 def get_origin_settings():
