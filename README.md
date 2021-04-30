@@ -6,6 +6,7 @@
 - [Running scripts inside container](#running-scripts)
     - [Running Migrations](#running-migrations)
     - [Running pylint](#run-pylint)
+- [Environment Variables](#environment-variables)  
 - [Json Schemas](#json-schemas)
     - [User Receive](#user-receive)
     - [User Create](#user-create)
@@ -61,6 +62,15 @@ sh migrate.sh
 ```
 sh lint.sh
 ```
+
+### Environment Variables
+
+| NAME | DESC | TYPE | DEFAULT |
+| --- | --- | --- | --- |
+| DATABASE_URL | The database url | Url String | - |
+| ALLOWED_ORIGINS | List of allowed origins in production | List stored as Json String | - |
+| SECRET_KEY | 64 digit hexadecimal string used for encryption | String | Random String |
+| DEBUG | Is Debug Mode | Boolean as String | True |
 
 ### Json Schemas 
 
