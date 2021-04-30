@@ -2,7 +2,7 @@
 # Migrate
 alembic upgrade head
 # Run
-if ${ALLOW_RELOAD:-"false"} == "true"
+if ${ALLOW_RELOAD:-"False"} == "True"
 then
     echo "ALLOW_RELOAD"
     uvicorn app.main:app --reload --host 0.0.0.0 --port ${PORT:-80}
