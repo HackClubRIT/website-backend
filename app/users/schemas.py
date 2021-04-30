@@ -32,7 +32,7 @@ class BaseSerializer(BaseModel):
         if email:
             if email_validator(email) is None:
                 raise ValidationError("Email is invalid")
-            return email
+        return email
 
 
 class UserBase(BaseSerializer):
