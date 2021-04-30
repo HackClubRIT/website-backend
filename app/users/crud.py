@@ -32,14 +32,14 @@ def get_user(database: Session, user_id: int):
                                               models.User.is_active == True).first()
 
 
-def get_user_by_username(database: Session, username: str, all_users=False):
+def get_user_by_email(database: Session, email: str, all_users=False):
     """
     Get User By Username
     :param all_users: check all users in db including inactive ones
     """
     if all_users:
-        return database.query(models.User).filter(models.User.username == username).first()
-    return database.query(models.User).filter(models.User.username == username,
+        return database.query(models.User).filter(models.User.email == email).first()
+    return database.query(models.User).filter(models.User.email == email,
                                               models.User.is_active == True).first()
 
 
@@ -49,7 +49,7 @@ def create_user(database: Session, user: schemas.UserCreate):
     Development Only
     """
     db_user = models.User(
-        username=user.username,
+        email=user.email,
         password=hash_password(user.password),
         name=user.name,
         role=user.role

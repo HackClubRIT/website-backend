@@ -3,8 +3,8 @@ Define serializers
 """
 # pylint: disable=no-self-argument, no-self-use
 from typing import Optional
-from pydantic import BaseModel, validator, constr
-from app.commons.validators import name_validator
+from pydantic import BaseModel, validator, constr, ValidationError
+from app.commons.validators import name_validator, email_validator
 from app.users.roles import Roles
 
 
@@ -20,13 +20,24 @@ class BaseSerializer(BaseModel):
         """
         if name:
             if name_validator(name) is None:
-                raise AssertionError("Name contains invalid characters")
+                raise ValidationError("Name contains invalid characters")
         return name
+
+    @validator("email", check_fields=False)
+    def is_valid_email(cls, email):
+        """
+        Is valid email?
+        :raise AssertionError
+        """
+        if email:
+            if email_validator(email) is None:
+                raise ValidationError("Email is invalid")
+            return email
 
 
 class UserBase(BaseSerializer):
     """Base serializer"""
-    username: str
+    email: str
     role: Roles
     name: str
 
@@ -38,8 +49,8 @@ class UserCreate(UserBase):
 
 class UserUpdate(BaseSerializer):
     """Update Serializer"""
-    username: Optional[str]
-    password: Optional[str]
+    email: Optional[str]
+    password: Optional[constr(min_length=8)]
     name: Optional[str]
 
 
@@ -55,7 +66,7 @@ class User(UserBase):
 
 class UserInDB(User):
     """Mocks User Table"""
-    password: str
+    password: constr(min_length=8)
 
 
 class Token(BaseModel):
@@ -66,4 +77,4 @@ class Token(BaseModel):
 
 class TokenData(BaseModel):
     """Data encrypted by token"""
-    username: Optional[str] = None
+    email: Optional[str] = None

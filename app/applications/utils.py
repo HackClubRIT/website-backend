@@ -11,8 +11,9 @@ def create_user_from_application(database: Session, application):
     """Create user after application has been approved"""
     user = UserCreate(
         role=Roles.USER,
-        password=application.email,
-        username=application.email,
+        # Ensure this password is >= 8 characters
+        password="password",
+        email=application.email,
         name=application.name
     )
 

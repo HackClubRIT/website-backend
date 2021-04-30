@@ -33,9 +33,9 @@ def get_user(user_id: int, database: Session = Depends(get_db)):
 def create_user(user: UserCreate, database: Session = Depends(get_db)):
     """Create a new user"""
     is_debug(status_code=405)
-    existing_user = crud.get_user_by_username(
+    existing_user = crud.get_user_by_email(
         database=database,
-        username=user.username,
+        email=user.email,
         all_users=True
     )
     if existing_user:
@@ -50,13 +50,14 @@ def update_user_partial(user_id: int, new_user_data: UserUpdate,
     """Update User EndPoint"""
     if current_user.id == user_id or is_admin(current_user):
 
-        if hasattr(new_user_data, "username"):
-            same_username_user = crud.get_user_by_username(
+        if hasattr(new_user_data, "email"):
+            same_email_user = crud.get_user_by_email(
                 database=database,
-                username=new_user_data.username
+                email=new_user_data.email,
+                all_users=True
             )
-            if same_username_user and same_username_user.id != user_id:
-                # Verify that there really exists another user with the same username
+            if same_email_user and same_email_user.id != user_id:
+                # Verify that there really exists another user with the same email
                 raise HTTPException(status_code=400, detail="Username already taken")
 
         new_user_from_db = crud.update_user(
@@ -87,7 +88,7 @@ def delete_user(user_id: int,
 @router.post("/token", response_model=Token)
 def login_for_access_token(database: Session = Depends(get_db),
                            form_data: OAuth2PasswordRequestForm = Depends()):
-    """Login Via username, password to get token"""
+    """Login Via email, password to get token"""
     user = authenticate_user(database, form_data.username, form_data.password)
     if not user:
         raise HTTPException(
@@ -97,6 +98,6 @@ def login_for_access_token(database: Session = Depends(get_db),
         )
     access_token_expires = timedelta(minutes=JWT_ACCESS_TOKEN_EXPIRE_MINUTES)
     access_token = create_access_token(
-        data={"sub": user.username}, expires_delta=access_token_expires
+        data={"sub": user.email}, expires_delta=access_token_expires
     )
     return {"access_token": access_token, "token_type": "bearer"}

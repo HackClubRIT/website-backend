@@ -67,7 +67,7 @@ sh lint.sh
 #### User Receive
 ```
 {
-    "username": STRING, 
+    "email": STRING, 
     "role": ENUM(ADMIN, MODERATOR, USER), 
     "name": STRING, 
     "id": INTEGER, 
@@ -78,7 +78,7 @@ sh lint.sh
 #### User Create
 ```
 {
-    "username": STRING, 
+    "email": STRING, 
     "role": ENUM(ADMIN, MODERATOR, USER), 
     "name": STRING,
     "password": STRING
@@ -88,7 +88,7 @@ sh lint.sh
 #### User Update
 ```
 {
-    "username": STRING[Optional],
+    "email": STRING[Optional],
     "name": STRING[Optional],
     "password": STRING[Optional]
 }
@@ -121,7 +121,7 @@ sh lint.sh
 | `/auth/user` | Create new User(DEBUG ONLY) | POST | [UserCreate](#user-create) | No | [User](#user-receive) |
 | `/auth/user/{user_id}` | Update Existing User | PATCH | [UserUpdate](#user-update) | Yes |  [User](#user-receive) |
 | `/auth/user/{user_id}` | Soft Delete User By ID | DELETE | - | Yes |  - |
-| `/auth/token` | Return token by submitting credentials | POST | `{"username": STRING, "password": STRING}` | No | `{"access_token": "string", "token_type": "string"}` |
+| `/auth/token` | Return token by submitting credentials | POST | `{"email": STRING, "password": STRING}` | No | `{"access_token": "string", "token_type": "string"}` |
 | `/application` | View all pending applications | GET | - | Yes | [List(ApplicationView)](#applicationview) |
 | `/application/{application_id}` | View application by ID | GET | - | No | [ApplicationView](#applicationview) |
 | `/application/{application_id}` | Approve/Reject Application | PATCH | `{"approved": BOOLEAN}` | Yes | - |  
