@@ -2,7 +2,7 @@
 Application Model
 """
 from sqlalchemy import Column, String, Integer, func, DateTime, JSON, Enum
-from app.database import Base
+from app.database.config_db import Base
 from .application_states import ApplicationStates
 
 

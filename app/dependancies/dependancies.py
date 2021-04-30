@@ -6,7 +6,8 @@ from fastapi.security import OAuth2PasswordBearer
 from sqlalchemy.orm import Session
 from jose import JWTError, jwt
 from app.users.schemas import TokenData, UserInDB
-from app.database import SessionLocal
+from app.database.config_db import SessionLocal
+from app.database.config_test_db import TestingSessionLocal
 from app.users.crud import get_user_by_email
 from app.settings import SECRET_KEY, JWT_HASH_ALGORITHM
 
@@ -18,6 +19,15 @@ def get_db():
     Get the current db session
     """
     database = SessionLocal()
+    try:
+        yield database
+    finally:
+        database.close()
+
+
+def get_test_db():
+    """The test db dependency"""
+    database = TestingSessionLocal()
     try:
         yield database
     finally:
