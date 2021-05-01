@@ -21,7 +21,7 @@ class ApplicationBase(BaseModel):
         :raise AssertionError
         """
         if email_validator(email) is None:
-            raise ValidationError("Invalid Email")
+            raise ValueError("Invalid Email")
         return email
 
     @validator("name")
@@ -31,7 +31,7 @@ class ApplicationBase(BaseModel):
         :raise AssertionError
         """
         if name_validator(name) is None:
-            raise ValidationError("Name contains invalid characters")
+            raise ValueError("Name contains invalid characters")
         return name
 
 

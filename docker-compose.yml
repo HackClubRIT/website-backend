@@ -22,3 +22,11 @@ services:
       POSTGRES_DB: 'hackclubdb'
     volumes:
     - "./db-data:/var/lib/postgresql"
+
+  test-db:
+    container_name: "test-db"
+    image: postgres:13-alpine
+    environment:
+      POSTGRES_USER: "user"
+      POSTGRES_PASSWORD: 'password'
+      POSTGRES_DB: 'hackclubtestdb'
