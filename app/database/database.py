@@ -9,10 +9,6 @@ def set_up_database(env_variable="DATABASE_URL"):
     """Set up connection to a db"""
     database_url = environ.get(env_variable)
 
-    if database_url is None:
-        print("No %s exist" % env_variable)
-        return None
-
     if database_url.startswith("postgres://"):
         database_url = database_url.replace("postgres://", "postgresql://", 1)
 
