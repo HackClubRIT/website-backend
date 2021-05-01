@@ -73,14 +73,14 @@ sh test.sh
 
 ### Environment Variables
 
-| NAME | DESC | TYPE | DEFAULT |
+| NAME | DESC | TYPE | DEFAULT | REQUIRED |
 | --- | --- | --- | --- |
-| DATABASE_URL | The database url | Url String | - |
-| ALLOWED_ORIGINS | List of allowed origins in production | List as Json String | - |
-| SECRET_KEY | 64 digit hexadecimal string used for encryption | String | Random String |
-| DEBUG | Is Debug Mode | Boolean as String | true |
-| ALLOW_RELOAD | Pass --reload param to uvicorn run server cmd | Boolean as String | true |
-| TEST_DB | Test Database URL | Url String | - |
+| DATABASE_URL | The database url | Url String | - | YES |
+| ALLOWED_ORIGINS | List of allowed origins in production | List as Json String | - | NO |
+| SECRET_KEY | 64 digit hexadecimal string used for encryption | String | - | YES |
+| DEBUG | Is Debug Mode | Boolean as String | true | NO |
+| ALLOW_RELOAD | Pass --reload param to uvicorn run server cmd | Boolean as String | true | NO |
+| TEST_DB | Test Database URL | Url String | - | NO |
 
 ### Json Schemas 
 

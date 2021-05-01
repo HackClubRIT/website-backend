@@ -5,13 +5,16 @@ from os import environ
 from sqlalchemy import create_engine
 
 
-def set_up_database(env_variable="DATABASE_URL"):
+def set_up_database(env_variable="DATABASE_URL", fail_silently=False):
     """Set up connection to a db"""
     database_url = environ.get(env_variable)
 
-    if database_url.startswith("postgres://"):
-        database_url = database_url.replace("postgres://", "postgresql://", 1)
-
+    try:
+        if database_url.startswith("postgres://"):
+            database_url = database_url.replace("postgres://", "postgresql://", 1)
+    except AttributeError:
+        print("NO TEST DB")
+        return None
     return create_engine(database_url)
 
 
