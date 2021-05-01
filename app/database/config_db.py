@@ -1,8 +1,8 @@
 """
 Config Normal Database
 """
-from sqlalchemy.orm import sessionmaker, declarative_base
 from os import environ
+from sqlalchemy.orm import sessionmaker, declarative_base
 from .database import set_up_database
 
 if environ.get("DATABASE_URL"):
