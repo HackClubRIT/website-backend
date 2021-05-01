@@ -63,14 +63,24 @@ sh migrate.sh
 sh lint.sh
 ```
 
+### Run tests
+
+Run tests using pytest
+
+```
+sh test.sh
+```
+
 ### Environment Variables
 
 | NAME | DESC | TYPE | DEFAULT |
 | --- | --- | --- | --- |
 | DATABASE_URL | The database url | Url String | - |
-| ALLOWED_ORIGINS | List of allowed origins in production | List stored as Json String | - |
+| ALLOWED_ORIGINS | List of allowed origins in production | List as Json String | - |
 | SECRET_KEY | 64 digit hexadecimal string used for encryption | String | Random String |
-| DEBUG | Is Debug Mode | Boolean as String | True |
+| DEBUG | Is Debug Mode | Boolean as String | true |
+| ALLOW_RELOAD | Pass --reload param to uvicorn run server cmd | Boolean as String | true |
+| TEST_DB | Test Database URL | Url String | - |
 
 ### Json Schemas 
 
