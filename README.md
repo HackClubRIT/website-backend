@@ -6,6 +6,7 @@
 - [Running scripts inside container](#running-scripts)
     - [Running Migrations](#running-migrations)
     - [Running pylint](#run-pylint)
+    - [Running tests](#run-tests)
 - [Environment Variables](#environment-variables)  
 - [Json Schemas](#json-schemas)
     - [User Receive](#user-receive)
