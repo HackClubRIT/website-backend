@@ -102,13 +102,14 @@ def test_partial_update_success():
 
 def test_delete():
     """
-    Test PATCH /auth/user/:userId
+    Test DELETE /auth/user/:userId
     Success Case
     """
     admin_user = test_instance.users[Roles.ADMIN]
     mod_user = test_instance.users[Roles.MODERATOR]
     normal_user = test_instance.users[Roles.USER]
 
+    # Test if admin can delete any user
     response = test_instance.client.delete(
         "/auth/user/%d" % normal_user.id,
         headers=test_instance.set_auth(test_instance.get_token(admin_user))
@@ -117,6 +118,7 @@ def test_delete():
     response = test_instance.client.get("/auth/user/%d" % normal_user.id)
     assert response.status_code == 404
 
+    # Test if a user can delete itself
     response = test_instance.client.delete(
         "/auth/user/%d" % mod_user.id,
         headers=test_instance.set_auth(test_instance.get_token(mod_user))
