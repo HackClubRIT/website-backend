@@ -39,5 +39,5 @@ jobs:
        - name: "Run tests"
          run: "pytest"
          env:
-          TEST_DB: "postgresql://user:password@db/testdb"
+          TEST_DB: "postgresql://user:password@localhost/testdb"
           DATABASE_URL: "postgresql://user:password@localhost/testdb"
