@@ -3,7 +3,7 @@ Application Serializers
 """
 # pylint: disable=no-self-argument,no-self-use
 import datetime
-from pydantic import BaseModel, validator, ValidationError
+from pydantic import BaseModel, validator
 from app.applications.application_states import ApplicationStates
 from app.commons.validators import name_validator, email_validator
 

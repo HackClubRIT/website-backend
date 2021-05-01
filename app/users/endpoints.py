@@ -105,4 +105,5 @@ def login_for_access_token(database: Session = Depends(get_db),
 
 @router.get("/check", status_code=204)
 def is_authenticated(_: UserInDB = Depends(get_current_user)):
+    """Check Auth"""
     return None

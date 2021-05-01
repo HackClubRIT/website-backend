@@ -9,14 +9,14 @@ test_instance = TestInstance()
 
 def test_get_user():
     """Test GET /auth/user/:userId"""
-    for role, user in test_instance.users.items():
+    for _, user in test_instance.users.items():
         response = test_instance.client.get("/auth/user/%d" % user.id)
         assert response.status_code == 200
 
 
 def test_login_and_token_fail():
     """Test POST /auth/user Fail Case"""
-    for role, user in test_instance.users.items():
+    for _, user in test_instance.users.items():
         response = test_instance.client.post(
             "/auth/token",
             data={
@@ -29,7 +29,7 @@ def test_login_and_token_fail():
 
 def test_login_and_token_success():
     """Test POST /auth/user Success Case"""
-    for role, user in test_instance.users.items():
+    for _, user in test_instance.users.items():
         token = test_instance.get_token(user)
         response = test_instance.client.get("/auth/check", headers=test_instance.set_auth(token))
         assert response.status_code == 204
@@ -40,14 +40,14 @@ def test_partial_update_invalid_data():
     Test PATCH /auth/user/:userId
     Only with invalid data
     """
-    invalid_name_and_email = test_instance.random_string()
+    invalid_name_and_email = test_instance.random_string(assure_num=True)
     invalid_password = test_instance.random_string(randint(1, 7))
     invalid_datas = [
         {"email": invalid_name_and_email},
         {"name": invalid_name_and_email},
         {"password": invalid_password}
     ]
-    for role, user in test_instance.users.items():
+    for _, user in test_instance.users.items():
         for invalid_data in invalid_datas:
             response = test_instance.client.patch(
                 "/auth/user/%d" % user.id,
@@ -64,7 +64,7 @@ def test_partial_update_invalid_permissions():
     """
     non_auth_users = [user for role, user in test_instance.users.items() if role != Roles.ADMIN]
     for current_user in non_auth_users:
-        other_users = [user for role, user in test_instance.users.items() if user != current_user]
+        other_users = [user for _, user in test_instance.users.items() if user != current_user]
 
         token = test_instance.get_token(current_user)
         for user in other_users:
@@ -83,7 +83,7 @@ def test_partial_update_success():
     Success Case
     """
     admin_user = test_instance.users[Roles.ADMIN]
-    for role, user in test_instance.users.items():
+    for _, user in test_instance.users.items():
         # Admin Update
         response = test_instance.client.patch(
             "/auth/user/%d" % user.id,
@@ -105,3 +105,22 @@ def test_delete():
     Test PATCH /auth/user/:userId
     Success Case
     """
+    admin_user = test_instance.users[Roles.ADMIN]
+    mod_user = test_instance.users[Roles.MODERATOR]
+    normal_user = test_instance.users[Roles.USER]
+
+    response = test_instance.client.delete(
+        "/auth/user/%d" % normal_user.id,
+        headers=test_instance.set_auth(test_instance.get_token(admin_user))
+    )
+    assert response.status_code == 204
+    response = test_instance.client.get("/auth/user/%d" % normal_user.id)
+    assert response.status_code == 404
+
+    response = test_instance.client.delete(
+        "/auth/user/%d" % mod_user.id,
+        headers=test_instance.set_auth(test_instance.get_token(mod_user))
+    )
+    assert response.status_code == 204
+    response = test_instance.client.get("/auth/user/%d" % mod_user.id)
+    assert response.status_code == 404

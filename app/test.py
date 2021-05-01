@@ -1,14 +1,20 @@
+"""
+Test Utils
+"""
 from random import randint
+from fastapi.testclient import TestClient
 from app.database.config_db import Base
 from app.database.config_test_db import engine
 from app.main import app
 from app.dependancies import get_test_db, get_db
 from app.users.roles import Roles
 from .users.schemas import UserCreate, User, Token
-from fastapi.testclient import TestClient
 
 
 class TestInstance:
+    """
+    The TestInstance Class contains all utilities for running tests
+    """
     def __init__(self):
         """Pre test Setup"""
         # Refresh test db
@@ -70,4 +76,3 @@ class TestInstance:
                 token.access_token
             )
         }
-
