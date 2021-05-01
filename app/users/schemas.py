@@ -5,6 +5,7 @@ Define serializers
 from typing import Optional
 from pydantic import BaseModel, validator, constr
 from app.commons.validators import name_validator, email_validator
+from app.exceptions import ValidationError
 from app.users.roles import Roles
 
 
@@ -20,7 +21,7 @@ class BaseSerializer(BaseModel):
         """
         if name:
             if name_validator(name) is None:
-                raise ValueError("Name contains invalid characters")
+                raise ValidationError("Name contains invalid characters")
         return name
 
     @validator("email", check_fields=False)
@@ -31,7 +32,7 @@ class BaseSerializer(BaseModel):
         """
         if email:
             if email_validator(email) is None:
-                raise ValueError("Email is invalid")
+                raise ValidationError("Email is invalid")
         return email
 
 

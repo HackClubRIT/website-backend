@@ -37,6 +37,15 @@ class TestInstance:
             assert response.status_code == 201
             self.users[role] = User(**response.json())
 
+    def get_token(self, user):
+        """
+        :returns users.schema.Token
+        """
+        data = {"username": user.email, "password": self.default_password}
+        response = self.client.post("/auth/token", data=data)
+        assert response.status_code == 200
+        return Token(**response.json())
+
     @staticmethod
     def random_string(length=10, assure_num=False):
         """
@@ -50,7 +59,7 @@ class TestInstance:
     @staticmethod
     def random_email():
         """Random Email"""
-        return TestInstance.random_string() + "@somedomain.com"
+        return TestInstance.random_string().lower() + "@somedomain.com"
 
     @staticmethod
     def set_auth(token: Token):

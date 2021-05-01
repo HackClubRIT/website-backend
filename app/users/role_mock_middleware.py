@@ -4,7 +4,7 @@ So as of now these are 'mock' middlewares, expected to mimic the behaviour of mi
 feature is implemented in fastAPI
 """
 from fastapi import HTTPException
-from app.exception_response_body import USER_FORBIDDEN
+from app.exceptions import USER_FORBIDDEN
 from .roles import Roles, hierarchy
 
 exception = HTTPException(status_code=403, detail=USER_FORBIDDEN)
