@@ -3,7 +3,7 @@ Define serializers
 """
 # pylint: disable=no-self-argument, no-self-use
 from typing import Optional
-from pydantic import BaseModel, validator, constr, ValidationError
+from pydantic import BaseModel, validator, constr
 from app.commons.validators import name_validator, email_validator
 from app.users.roles import Roles
 
@@ -20,7 +20,7 @@ class BaseSerializer(BaseModel):
         """
         if name:
             if name_validator(name) is None:
-                raise ValidationError("Name contains invalid characters")
+                raise ValueError("Name contains invalid characters")
         return name
 
     @validator("email", check_fields=False)
@@ -31,7 +31,7 @@ class BaseSerializer(BaseModel):
         """
         if email:
             if email_validator(email) is None:
-                raise ValidationError("Email is invalid")
+                raise ValueError("Email is invalid")
         return email
 
 
@@ -43,7 +43,7 @@ class UserBase(BaseSerializer):
 
 
 class UserCreate(UserBase):
-    """User write serializer(Can also be used for login)"""
+    """User write serializer"""
     password: constr(min_length=8)
 
 

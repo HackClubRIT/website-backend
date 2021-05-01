@@ -4,7 +4,7 @@ App Settings
 import json
 import os
 
-DEBUG = os.environ.get("DEBUG", "True") != "False"
+DEBUG = os.environ.get("DEBUG", "true") != "false"
 
 JWT_HASH_ALGORITHM = "HS256"
 

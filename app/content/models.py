@@ -2,7 +2,7 @@
 The event model
 """
 from sqlalchemy import Column, DateTime, String
-from app.database import Base
+from app.database.config_db import Base
 
 
 class Event(Base):

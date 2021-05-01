@@ -2,7 +2,7 @@
 Define db tables
 """
 from sqlalchemy import Column, String, Boolean, Integer, Enum
-from app.database import Base
+from app.database.config_db import Base
 from app.users.roles import Roles
 
 
