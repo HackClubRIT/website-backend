@@ -38,3 +38,4 @@ jobs:
          run: "pytest"
          env:
           TEST_DB: "postgresql://user:password@db/testdb"
+          DATABASE_URL: "postgresql://user:password@db/testdb"
