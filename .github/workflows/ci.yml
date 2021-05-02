@@ -32,12 +32,12 @@ jobs:
        - uses: actions/checkout@v2
        - name: "Install Packages"
          run: "python3 -m pip install -r requirements.txt"
-       # Linter
-       - name: "Run Linter"
-         run: "pylint app"
        # Test
        - name: "Run tests"
          run: "pytest"
+       # Linter
+       - name: "Run Linter"
+         run: "pylint app"
          env:
           TEST_DB: "postgresql://user:password@localhost/testdb"
           DATABASE_URL: "postgresql://user:password@localhost/testdb"
