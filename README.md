@@ -1,6 +1,6 @@
 # HackClub Website Backend
 
-## Table of Contents
+### Table of Contents
 - [Requirements](#requirements)
 - [Running the app](#running-the-app)
 - [Running scripts inside container](#running-scripts)
@@ -17,7 +17,7 @@
 - [Endpoints](#endpoints)
 - [PyCharm Docker Setup](#setting-up-docker-remote-interpreter-for-PyCharm-IDE)
 
-## Requirements
+### Requirements
 - Docker(With compose): Container tool
 
 Verify by
@@ -26,50 +26,48 @@ docker -v
 docker-compose -v
 ```  
 
-## Running the app
+### Running the app
 `$ docker-compose up`
 - Add `--build` to rebuild the image if needed.
 - Add `-d` to run in detached mode(No Output from uvicorn process)
 - `./app` & `./alembic` are mounted as volumes to refresh changes without rebuilding the image
 
 
-## Running Scripts
+### Running Scripts
 
 Various scripts for different purposes has been made in the `./scripts` directory. 
 They connect to the remote container from host and run commands inside the container.
 
 Set your docker container name(if you changed it) in `./scripts/set_env.sh`
 
-**Due to [#8](https://github.com/HackClubRIT/website-backend/issues/8), you have to execute scripts from inside the `./scripts` directory**
-
-### Running Migrations
+#### Running Migrations
 
 Make migrations using
 
 ```
-sh make_migrations.sh "<NAME>"
+sh scripts/make_migrations.sh "<NAME>"
 ```
 
 Migrate the database using
 
 ```
-sh migrate.sh
+sh scripts/migrate.sh
 ```
 
-### Run pylint
+#### Run pylint
 
 [Pylint](https://pypi.org/project/pylint/) is a Python static code analysis tool which looks for programming errors, helps enforcing a coding standard, sniffs for code smells and offers simple refactoring suggestions.
 
 ```
-sh lint.sh
+sh scripts/lint.sh
 ```
 
-### Run tests
+#### Run tests
 
 Run tests using pytest
 
 ```
-sh test.sh
+sh scripts/test.sh
 ```
 
 ### Environment Variables
@@ -80,7 +78,7 @@ sh test.sh
 | ALLOWED_ORIGINS | List of allowed origins in production | List as Json String | - | NO |
 | SECRET_KEY | 64 digit hexadecimal string used for encryption | String | - | YES |
 | DEBUG | Is Debug Mode | Boolean as String | true | NO |
-| ALLOW_RELOAD | Pass --reload param to uvicorn run server cmd | Boolean as String | true | NO |
+| ALLOW_RELOAD | Pass --reload param to uvicorn run server cmd | Boolean as String | false | NO |
 | TEST_DB | Test Database URL | Url String | - | NO |
 
 ### Json Schemas 
