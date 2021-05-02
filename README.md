@@ -146,5 +146,5 @@ sh scripts/test.sh
 | `/application/{application_id}` | Approve/Reject Application | PATCH | `{"approved": BOOLEAN}` | Yes | - |  
 
 
-### Setting up docker remote interpreter for PyCharm IDE
-Checkout this [blog](https://blog.jetbrains.com/pycharm/2015/12/using-docker-in-pycharm/), to allow code inspections by the IDE without installing any packages.
+### Setting up docker remote interpreter for IDEs
+VS Code, PyCharm - [Blog](https://dev.to/alvarocavalcanti/setting-up-a-python-remote-interpreter-using-docker-1i24)
