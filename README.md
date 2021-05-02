@@ -75,7 +75,7 @@ sh test.sh
 ### Environment Variables
 
 | NAME | DESC | TYPE | DEFAULT | REQUIRED |
-| --- | --- | --- | --- |
+| --- | --- | --- | --- | --- |
 | DATABASE_URL | The database url | Url String | - | YES |
 | ALLOWED_ORIGINS | List of allowed origins in production | List as Json String | - | NO |
 | SECRET_KEY | 64 digit hexadecimal string used for encryption | String | - | YES |
