@@ -6,11 +6,9 @@ from fastapi.middleware.cors import CORSMiddleware
 from .commons.mock_middleware import is_debug
 from .users.endpoints import router as user_router
 from .applications.endpoints import router as application_router
-from .settings import get_docs_url, get_origin_settings
+from .settings import get_origin_settings
 
-app = FastAPI(
-    docs_url=get_docs_url(),
-)
+app = FastAPI()
 
 app.add_middleware(
     CORSMiddleware,

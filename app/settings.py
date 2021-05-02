@@ -1,5 +1,6 @@
 """
 App Settings
+Django inspired settings file
 """
 import json
 import os
@@ -13,6 +14,8 @@ JWT_ACCESS_TOKEN_EXPIRE_MINUTES = 60 * 24
 SECRET_KEY = os.environ.get("SECRET_KEY")
 
 ALLOWED_ORIGINS = json.loads(os.environ.get("ALLOWED_ORIGINS", "[]"))
+
+TZ = "Asia/Calcutta"
 
 assert isinstance(ALLOWED_ORIGINS, list)
 
@@ -31,11 +34,3 @@ def get_origin_settings():
         settings["allow_origins"] = ALLOWED_ORIGINS
 
     return settings
-
-
-def get_docs_url():
-    """Set docs url according to DEBUG"""
-    # Disable Docs in Production
-    if DEBUG:
-        return "/docs"
-    return None
