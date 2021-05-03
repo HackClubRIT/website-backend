@@ -1,10 +1,14 @@
+"""
+Application Tests
+"""
 import json
 from random import randint
-
 import pytest
 from app.applications.schemas import ApplicationRead
 from app.test import FeatureTest
 from app.users.roles import Roles
+# pytest needs the fixture to be same name
+# pylint: disable=redefined-outer-name
 
 USER_READ_PERMISSIONS = {
     Roles.ADMIN: 200,
@@ -14,11 +18,17 @@ USER_READ_PERMISSIONS = {
 
 
 class ApplicationTest(FeatureTest):
-    def __init__(self, **kwargs):
+    """
+    Setup Application Tests
+    """
+    def __init__(self):
         self.applications = []
-        super().__init__(**kwargs)
+        super().__init__()
 
     def new_application(self, invalid_name=False, invalid_email=False):
+        """
+        Create new Application with Endpoint
+        """
         data = {
             "email": self.random_email(),
             "name": self.random_string(),
@@ -33,7 +43,7 @@ class ApplicationTest(FeatureTest):
         return data
 
     def additional_setup(self, **kwargs):
-        for i in range(kwargs.get("num_applications", 5)):
+        for _ in range(5):
             new_application = self.new_application()
 
             response = self.client.post("/application/", data=json.dumps(new_application))

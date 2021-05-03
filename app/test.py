@@ -52,7 +52,6 @@ class FeatureTest:
     @abstractmethod
     def additional_setup(self, **kwargs):
         """Override this to create other objects for testing"""
-        pass
 
     def set_auth_from_user(self, user):
         """

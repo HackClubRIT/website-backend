@@ -5,6 +5,7 @@ from random import randint
 import pytest
 from app.test import FeatureTest
 from app.users.roles import Roles
+# pylint: disable=redefined-outer-name
 
 
 @pytest.fixture
