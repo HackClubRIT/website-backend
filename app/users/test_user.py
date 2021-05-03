@@ -2,19 +2,25 @@
 Test user module
 """
 from random import randint
-from app.test import TestInstance
+import pytest
+from app.test import FeatureTest
 from app.users.roles import Roles
-test_instance = TestInstance()
 
 
-def test_get_user():
+@pytest.fixture
+def test_instance():
+    """Yield a new instance of FeatureTest everytime a test runs"""
+    yield FeatureTest()
+
+
+def test_get_user(test_instance):
     """Test GET /auth/user/:userId"""
     for _, user in test_instance.users.items():
         response = test_instance.client.get("/auth/user/%d" % user.id)
         assert response.status_code == 200
 
 
-def test_login_and_token_fail():
+def test_login_and_token_fail(test_instance):
     """Test POST /auth/user Fail Case"""
     for _, user in test_instance.users.items():
         response = test_instance.client.post(
@@ -27,7 +33,7 @@ def test_login_and_token_fail():
         assert response.status_code == 401
 
 
-def test_login_and_token_success():
+def test_login_and_token_success(test_instance):
     """Test POST /auth/user Success Case"""
     for _, user in test_instance.users.items():
         token = test_instance.get_token(user)
@@ -35,7 +41,7 @@ def test_login_and_token_success():
         assert response.status_code == 204
 
 
-def test_partial_update_invalid_data():
+def test_partial_update_invalid_data(test_instance):
     """
     Test PATCH /auth/user/:userId
     Only with invalid data
@@ -52,12 +58,12 @@ def test_partial_update_invalid_data():
             response = test_instance.client.patch(
                 "/auth/user/%d" % user.id,
                 json=invalid_data,
-                headers=test_instance.set_auth(test_instance.get_token(user))
+                headers=test_instance.set_auth_from_user(user)
             )
             assert response.status_code == 422
 
 
-def test_partial_update_invalid_permissions():
+def test_partial_update_invalid_permissions(test_instance):
     """
     Test PATCH /auth/user/:userId
     Invalid permissions
@@ -77,7 +83,7 @@ def test_partial_update_invalid_permissions():
             assert response.status_code == 403
 
 
-def test_partial_update_success():
+def test_partial_update_success(test_instance):
     """
     Test PATCH /auth/user/:userId
     Success Case
@@ -94,13 +100,13 @@ def test_partial_update_success():
         # Self Update
         response = test_instance.client.patch(
             "/auth/user/%d" % user.id,
-            headers=test_instance.set_auth(test_instance.get_token(user)),
+            headers=test_instance.set_auth_from_user(user),
             json={"name": test_instance.random_string()}
         )
         assert response.status_code == 200
 
 
-def test_delete():
+def test_delete(test_instance):
     """
     Test DELETE /auth/user/:userId
     Success Case

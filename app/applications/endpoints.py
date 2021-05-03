@@ -40,7 +40,7 @@ def view_application(application_id: int, database: Session = Depends(get_db),
         return crud.get_application(database=database, application_id=application_id)
 
 
-@router.post("/", response_model=ApplicationRead)
+@router.post("/", response_model=ApplicationRead, status_code=201)
 def create_application(application: ApplicationBase, database: Session = Depends(get_db)):
     """Create an application"""
     min_application_difference = 7 * 24 * 60 * 60  # 1 week
@@ -80,6 +80,10 @@ def update_application(
     """Approve/Reject Application"""
     approved_state_map = {True: ApplicationStates.APPROVED, False: ApplicationStates.REJECTED}
     if is_at_least_role(current_user=current_user, role=min_update_role):
+        application_from_db = crud.get_application(database, application_id)
+        if not application_from_db.status == ApplicationStates.PENDING:
+            raise HTTPException(status_code=400, detail="The application must be pending")
+
         updated_application = crud.change_state_of_application(
             database=database,
             application_id=application_id,
