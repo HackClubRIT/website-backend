@@ -9,6 +9,7 @@ from app.database.config_test_db import engine
 from app.main import app
 from app.dependancies import get_test_db, get_db
 from app.users.roles import Roles
+from .users.crud import create_user
 from .users.schemas import UserCreate, User, Token
 
 
@@ -16,7 +17,7 @@ class FeatureTest:
     """
     The TestInstance Class contains all utilities for running tests
     """
-    def __init__(self, **kwargs):
+    def __init__(self, database, **kwargs):
         """
         Pre test Setup
         :param setup: Callback for any additional setup function, this object is passed
@@ -25,12 +26,12 @@ class FeatureTest:
         # Refresh test db
         Base.metadata.drop_all(bind=engine)
         Base.metadata.create_all(bind=engine)
-        print("DB REFRESH")
         # Override db dependency
         app.dependency_overrides[get_db] = get_test_db
 
         self.client = TestClient(app)
         self.users = {}
+        self.database_conn = database
         self.default_password = FeatureTest.random_string(randint(8, 20))
         self.set_up_users()
         self.additional_setup(**kwargs)
@@ -45,9 +46,10 @@ class FeatureTest:
                 password=self.default_password,
                 role=role
             )
-            response = self.client.post("/auth/user", data=self.users[role].json())
-            assert response.status_code == 201
-            self.users[role] = User(**response.json())
+            db_user = create_user(self.database_conn, user=self.users[role])
+            #response = self.client.post("/auth/user", data=self.users[role].json())
+            #assert response.status_code == 201
+            self.users[role] = User(**db_user.__dict__)
 
     @abstractmethod
     def additional_setup(self, **kwargs):

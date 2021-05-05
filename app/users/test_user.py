@@ -2,16 +2,7 @@
 Test user module
 """
 from random import randint
-import pytest
-from app.test import FeatureTest
 from app.users.roles import Roles
-# pylint: disable=redefined-outer-name
-
-
-@pytest.fixture
-def test_instance():
-    """Yield a new instance of FeatureTest everytime a test runs"""
-    yield FeatureTest()
 
 
 def test_get_user(test_instance):
