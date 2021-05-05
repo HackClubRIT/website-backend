@@ -18,11 +18,11 @@ SECRET_KEY = os.environ.get("SECRET_KEY",
 ALLOWED_ORIGINS = json.loads(os.environ.get("ALLOWED_ORIGINS", "[]"))
 
 _EMAIL_CONF = ConnectionConfig(
-    MAIL_USERNAME=os.environ.get("EMAIL_USERNAME"),
-    MAIL_PASSWORD=os.environ.get("EMAIL_PASSWORD"),
-    MAIL_FROM=os.environ.get("EMAIL_FROM", ""),
-    MAIL_PORT=int(os.environ.get("EMAIL_PORT"), 0),
-    MAIL_SERVER=os.environ.get("EMAIL_SERVER"),
+    MAIL_USERNAME=os.environ.get("EMAIL_USERNAME", ""),
+    MAIL_PASSWORD=os.environ.get("EMAIL_PASSWORD", ""),
+    MAIL_FROM=os.environ.get("EMAIL_FROM", "test@test.com"),
+    MAIL_PORT=int(os.environ.get("EMAIL_PORT", 0)),
+    MAIL_SERVER=os.environ.get("EMAIL_SERVER", ""),
     MAIL_TLS=os.environ.get("EMAIL_TLS", "false") != "false",
     MAIL_SSL=os.environ.get("EMAIL_SSL", "false") != "false",
     USE_CREDENTIALS=True,

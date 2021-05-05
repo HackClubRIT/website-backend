@@ -88,11 +88,11 @@ These environment variables are stored in a separate `email.env` file(Ignored by
 
 | NAME | DESC | TYPE | DEFAULT | REQUIRED |
 | --- | --- | --- | --- | --- |
-| EMAIL_USERNAME | Username(Generally same as FROM mail) | String | - | YES |
-| EMAIL_PASSWORD | Password | String | - | YES |
-| EMAIL_FROM | Email from which the mail is sent | Email | - | YES |
-| EMAIL_PORT | The email port | Integer | - | YES |
-| EMAIL_SERVER | The email server url | Url | - | YES |
+| EMAIL_USERNAME | Username(Generally same as FROM mail) | String | - | NO |
+| EMAIL_PASSWORD | Password | String | - | NO |
+| EMAIL_FROM | Email from which the mail is sent | Email | test@test.com | NO |
+| EMAIL_PORT | The email port | Integer | - | NO |
+| EMAIL_SERVER | The email server url | Url | - | NO |
 | EMAIL_TLS | Use TLS | Boolean as String | false | NO |
 | EMAIL_SSL | Use SSL | Boolean as String | false | NO |
 
