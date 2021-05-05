@@ -4,6 +4,7 @@ Application Endpoints
 # pylint: disable=inconsistent-return-statements
 import datetime
 from typing import List
+from dateutil import tz
 from fastapi import APIRouter, Depends, HTTPException
 from sqlalchemy.orm import Session
 from app.applications.schemas import ApplicationRead, ApplicationBase, ApplicationUpdate
@@ -13,7 +14,8 @@ from app.users.role_mock_middleware import is_at_least_role
 from app.users.schemas import UserInDB
 from . import crud
 from .application_states import ApplicationStates
-from .utils import create_user_from_application
+from .utils import create_user_from_application, send_fail_mail
+from ..settings import TZ
 
 router = APIRouter(
     prefix="/application",
@@ -49,7 +51,7 @@ def create_application(application: ApplicationBase, database: Session = Depends
         email=application.email
     )
     if last_application:
-        diff = (datetime.datetime.now() - last_application.created_date).total_seconds()
+        diff = (datetime.datetime.now(tz=tz.gettz(TZ)) - last_application.created_date).total_seconds()
 
         if last_application.status == ApplicationStates.APPROVED:
             raise HTTPException(
@@ -71,7 +73,7 @@ def create_application(application: ApplicationBase, database: Session = Depends
 
 
 @router.patch("/{application_id}")
-def update_application(
+async def update_application(
         application_id: int,
         data: ApplicationUpdate,
         database: Session = Depends(get_db),
@@ -91,9 +93,11 @@ def update_application(
         )
         if updated_application:
             if data.approved:
-                create_user_from_application(
+                await create_user_from_application(
                     database=database,
                     application=updated_application
                 )
+            else:
+                await send_fail_mail(updated_application)
             return updated_application
         raise HTTPException(status_code=404, detail="Application not found")

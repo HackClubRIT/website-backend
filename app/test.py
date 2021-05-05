@@ -9,6 +9,7 @@ from app.database.config_test_db import engine
 from app.main import app
 from app.dependancies import get_test_db, get_db
 from app.users.roles import Roles
+from .settings import fastapi_mail_instance
 from .users.crud import create_user
 from .users.schemas import UserCreate, User, Token
 
@@ -28,6 +29,9 @@ class FeatureTest:
         Base.metadata.create_all(bind=engine)
         # Override db dependency
         app.dependency_overrides[get_db] = get_test_db
+
+        # Dont send mail
+        fastapi_mail_instance.config.SUPPRESS_SEND = 1
 
         self.client = TestClient(app)
         self.users = {}

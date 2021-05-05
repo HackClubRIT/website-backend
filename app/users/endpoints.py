@@ -8,11 +8,11 @@ from sqlalchemy.orm import Session
 from app.exceptions import USER_FORBIDDEN
 from app.dependancies import get_db, get_current_user
 from app.settings import JWT_ACCESS_TOKEN_EXPIRE_MINUTES
+from app.commons.mock_middleware import is_debug
 from . import crud
 from .role_mock_middleware import is_admin
 from .schemas import User, UserCreate, Token, UserUpdate, UserInDB
 from .utils import authenticate_user, create_access_token
-from ..commons.mock_middleware import is_debug
 
 router = APIRouter(
     prefix="/auth",
@@ -81,7 +81,7 @@ def delete_user(user_id: int,
     if current_user.id != user_id and not is_admin(current_user):
         raise HTTPException(status_code=403, detail=USER_FORBIDDEN)
     if not crud.delete_user(database, user_id):
-        # If the current user is not in db(For Some Reason)
+        # If the current user is not in db
         raise HTTPException(status_code=400, detail="User not found")
 
 
