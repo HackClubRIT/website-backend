@@ -1,7 +1,7 @@
 """
 Run server
 """
-from fastapi import FastAPI, HTTPException
+from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
 from .commons.mock_middleware import is_debug
 from .commons.utils import send_email
@@ -36,4 +36,3 @@ async def send_email_endpoint(receiver: str):
         body="Hello World From FASTAPI",
     )
     return {"status": "OK"}
-

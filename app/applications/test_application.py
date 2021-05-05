@@ -141,27 +141,35 @@ def test_update_application(test_application_instance):
     )
     assert response.status_code == 422
     # Admin approved
-    application = test_application_instance.applications[1]
-    response = test_application_instance.client.patch(
-        "/application/%d" % application.id,
-        json={"approved": True},
-        headers=test_application_instance.
-            set_auth_from_user(test_application_instance.users[Roles.ADMIN])
-    )
-    assert response.status_code == 200
-    # Test User Creation
-    assert get_user_by_email(
-        database=test_application_instance.database_conn,
-        email=application.email) is not None
-    # Admin reject
-    application = test_application_instance.applications[2]
-    response = test_application_instance.client.patch(
-        "/application/%d" % application.id,
-        json={"approved": False},
-        headers=test_application_instance.
-            set_auth_from_user(test_application_instance.users[Roles.ADMIN])
-    )
-    assert response.status_code == 200
+    with test_application_instance.mail_instance.record_messages() as outbox:
+        application = test_application_instance.applications[1]
+        response = test_application_instance.client.patch(
+            "/application/%d" % application.id,
+            json={"approved": True},
+            headers=test_application_instance.
+                set_auth_from_user(test_application_instance.users[Roles.ADMIN])
+        )
+        assert response.status_code == 200
+        # Test User Creation
+        assert get_user_by_email(
+            database=test_application_instance.database_conn,
+            email=application.email) is not None
+        # Check mail
+        assert len(outbox) == 1
+        outbox.pop()
+
+        # Admin reject
+        application = test_application_instance.applications[2]
+        response = test_application_instance.client.patch(
+            "/application/%d" % application.id,
+            json={"approved": False},
+            headers=test_application_instance.
+                set_auth_from_user(test_application_instance.users[Roles.ADMIN])
+        )
+        assert response.status_code == 200
+        # Check mail
+        assert len(outbox) == 1
+
     # Admin approves rejected application
     response = test_application_instance.client.patch(
         "/application/%d" % application.id,

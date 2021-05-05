@@ -8,6 +8,7 @@
     - [Running pylint](#run-pylint)
     - [Running tests](#run-tests)
 - [Environment Variables](#environment-variables)  
+    - [Email Variables](#email-variables)
 - [Json Schemas](#json-schemas)
     - [User Receive](#user-receive)
     - [User Create](#user-create)
@@ -75,11 +76,25 @@ sh scripts/test.sh
 | NAME | DESC | TYPE | DEFAULT | REQUIRED |
 | --- | --- | --- | --- | --- |
 | DATABASE_URL | The database url | Url String | - | YES |
-| ALLOWED_ORIGINS | List of allowed origins in production | List as Json String | - | NO |
-| SECRET_KEY | 64 digit hexadecimal string used for encryption | String | - | YES |
+| ALLOWED_ORIGINS | List of allowed origins in production | List as Json String | \[*\] | NO |
+| SECRET_KEY | 64 digit hexadecimal string used for encryption | String | Random Key | NO |
 | DEBUG | Is Debug Mode | Boolean as String | true | NO |
 | ALLOW_RELOAD | Pass --reload param to uvicorn run server cmd | Boolean as String | false | NO |
 | TEST_DB | Test Database URL | Url String | - | NO |
+
+#### Email Variables
+
+These environment variables are stored in a separate `email.env` file(Ignored by git)
+
+| NAME | DESC | TYPE | DEFAULT | REQUIRED |
+| --- | --- | --- | --- | --- |
+| EMAIL_USERNAME | Username(Generally same as FROM mail) | String | - | YES |
+| EMAIL_PASSWORD | Password | String | - | YES |
+| EMAIL_FROM | Email from which the mail is sent | Email | - | YES |
+| EMAIL_PORT | The email port | Integer | - | YES |
+| EMAIL_SERVER | The email server url | Url | - | YES |
+| EMAIL_TLS | Use TLS | Boolean as String | false | NO |
+| EMAIL_SSL | Use SSL | Boolean as String | false | NO |
 
 ### Json Schemas 
 

@@ -21,8 +21,6 @@ class FeatureTest:
     def __init__(self, database, **kwargs):
         """
         Pre test Setup
-        :param setup: Callback for any additional setup function, this object is passed
-        additional arguments passed as args or kwargs
         """
         # Refresh test db
         Base.metadata.drop_all(bind=engine)
@@ -34,6 +32,7 @@ class FeatureTest:
         fastapi_mail_instance.config.SUPPRESS_SEND = 1
 
         self.client = TestClient(app)
+        self.mail_instance = fastapi_mail_instance
         self.users = {}
         self.database_conn = database
         self.default_password = FeatureTest.random_string(randint(8, 20))

@@ -51,7 +51,8 @@ def create_application(application: ApplicationBase, database: Session = Depends
         email=application.email
     )
     if last_application:
-        diff = (datetime.datetime.now(tz=tz.gettz(TZ)) - last_application.created_date).total_seconds()
+        diff = (datetime.datetime.now(tz=tz.gettz(TZ)) -
+                last_application.created_date).total_seconds()
 
         if last_application.status == ApplicationStates.APPROVED:
             raise HTTPException(

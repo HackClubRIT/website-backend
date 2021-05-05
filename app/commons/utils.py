@@ -1,3 +1,6 @@
+"""
+Common Utils
+"""
 from fastapi_mail import MessageSchema
 from app.settings import fastapi_mail_instance
 
