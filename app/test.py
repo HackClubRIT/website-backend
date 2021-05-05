@@ -9,6 +9,7 @@ from app.database.config_test_db import engine
 from app.main import app
 from app.dependancies import get_test_db, get_db
 from app.users.roles import Roles
+from .settings import fastapi_mail_instance
 from .users.crud import create_user
 from .users.schemas import UserCreate, User, Token
 
@@ -20,8 +21,6 @@ class FeatureTest:
     def __init__(self, database, **kwargs):
         """
         Pre test Setup
-        :param setup: Callback for any additional setup function, this object is passed
-        additional arguments passed as args or kwargs
         """
         # Refresh test db
         Base.metadata.drop_all(bind=engine)
@@ -29,7 +28,11 @@ class FeatureTest:
         # Override db dependency
         app.dependency_overrides[get_db] = get_test_db
 
+        # Dont send mail
+        fastapi_mail_instance.config.SUPPRESS_SEND = 1
+
         self.client = TestClient(app)
+        self.mail_instance = fastapi_mail_instance
         self.users = {}
         self.database_conn = database
         self.default_password = FeatureTest.random_string(randint(8, 20))
