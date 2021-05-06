@@ -1,4 +1,6 @@
-export CONTAINER_NAME="hackclub_backend"
+SCRIPT=$(readlink -f "$0")
+SCRIPTPATH=$(dirname "$SCRIPT")
+. $SCRIPTPATH/set_env.sh
 if [ -z "$1" ]
 then
    echo "ERROR: Empty Message";

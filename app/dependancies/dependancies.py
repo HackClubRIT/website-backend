@@ -7,7 +7,7 @@ from sqlalchemy.orm import Session
 from jose import JWTError, jwt
 from app.users.schemas import TokenData, UserInDB
 from app.database.config_db import SessionLocal
-from app.database.config_test_db import TestingSessionLocal
+from app.database.config_test_db import TESTING_SESSION_LOCAL
 from app.users.crud import get_user_by_email
 from app.settings import SECRET_KEY, JWT_HASH_ALGORITHM
 
@@ -27,7 +27,7 @@ def get_db():
 
 def get_test_db():
     """The test db dependency"""
-    database = TestingSessionLocal()
+    database = TESTING_SESSION_LOCAL()
     try:
         yield database
     finally:

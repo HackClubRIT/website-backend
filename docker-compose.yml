@@ -6,6 +6,7 @@ services:
     build: .
     env_file:
       - "development.env"
+      - "email.env"
     volumes:
     - "./app:/src/app"
     - "./alembic:/src/alembic"

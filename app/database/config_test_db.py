@@ -5,10 +5,9 @@ from sqlalchemy.orm import sessionmaker
 
 from app.database.database import set_up_database
 
-engine = set_up_database("TEST_DB", fail_silently=True)
+engine = set_up_database("TEST_DB")
 
 if engine:
-    TestingSessionLocal = sessionmaker(autocommit=False, autoflush=False, bind=engine)
+    TESTING_SESSION_LOCAL = sessionmaker(autocommit=False, autoflush=False, bind=engine)
 else:
-    TestingSessionLocal = None
-
+    TESTING_SESSION_LOCAL = None

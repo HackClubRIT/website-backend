@@ -1,0 +1,28 @@
+"""
+The test fixtures
+"""
+import pytest
+from app.applications.test_application import ApplicationTest
+from app.database.config_test_db import TESTING_SESSION_LOCAL
+from app.test import FeatureTest
+# pylint: disable=redefined-outer-name, duplicate-code
+
+@pytest.fixture(scope="module")
+def db_fixture():
+    """Yield a db session for testing"""
+    db_conn = TESTING_SESSION_LOCAL()
+    try:
+        yield db_conn
+    finally:
+        db_conn.close()
+
+@pytest.fixture(scope="module")
+def test_instance(db_fixture):
+    """Yield a new instance of FeatureTest everytime a new test module runs"""
+    yield FeatureTest(db_fixture)
+
+
+@pytest.fixture(scope="module")
+def test_application_instance(db_fixture):
+    """Yield a new instance of ApplicationTest everytime a new test module runs"""
+    yield ApplicationTest(db_fixture)

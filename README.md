@@ -1,12 +1,14 @@
 # HackClub Website Backend
 
-## Table of Contents
+### Table of Contents
 - [Requirements](#requirements)
 - [Running the app](#running-the-app)
 - [Running scripts inside container](#running-scripts)
     - [Running Migrations](#running-migrations)
     - [Running pylint](#run-pylint)
+    - [Running tests](#run-tests)
 - [Environment Variables](#environment-variables)  
+    - [Email Variables](#email-variables)
 - [Json Schemas](#json-schemas)
     - [User Receive](#user-receive)
     - [User Create](#user-create)
@@ -16,7 +18,7 @@
 - [Endpoints](#endpoints)
 - [PyCharm Docker Setup](#setting-up-docker-remote-interpreter-for-PyCharm-IDE)
 
-## Requirements
+### Requirements
 - Docker(With compose): Container tool
 
 Verify by
@@ -25,62 +27,74 @@ docker -v
 docker-compose -v
 ```  
 
-## Running the app
+### Running the app
 `$ docker-compose up`
 - Add `--build` to rebuild the image if needed.
 - Add `-d` to run in detached mode(No Output from uvicorn process)
 - `./app` & `./alembic` are mounted as volumes to refresh changes without rebuilding the image
 
 
-## Running Scripts
+### Running Scripts
 
 Various scripts for different purposes has been made in the `./scripts` directory. 
 They connect to the remote container from host and run commands inside the container.
 
 Set your docker container name(if you changed it) in `./scripts/set_env.sh`
 
-**Due to [#8](https://github.com/HackClubRIT/website-backend/issues/8), you have to execute scripts from inside the `./scripts` directory**
-
-### Running Migrations
+#### Running Migrations
 
 Make migrations using
 
 ```
-sh make_migrations.sh "<NAME>"
+sh scripts/make_migrations.sh "<NAME>"
 ```
 
 Migrate the database using
 
 ```
-sh migrate.sh
+sh scripts/migrate.sh
 ```
 
-### Run pylint
+#### Run pylint
 
 [Pylint](https://pypi.org/project/pylint/) is a Python static code analysis tool which looks for programming errors, helps enforcing a coding standard, sniffs for code smells and offers simple refactoring suggestions.
 
 ```
-sh lint.sh
+sh scripts/lint.sh
 ```
 
-### Run tests
+#### Run tests
 
 Run tests using pytest
 
 ```
-sh test.sh
+sh scripts/test.sh
 ```
 
 ### Environment Variables
 
 | NAME | DESC | TYPE | DEFAULT | REQUIRED |
-| --- | --- | --- | --- |
+| --- | --- | --- | --- | --- |
 | DATABASE_URL | The database url | Url String | - | YES |
-| ALLOWED_ORIGINS | List of allowed origins in production | List as Json String | - | NO |
-| SECRET_KEY | 64 digit hexadecimal string used for encryption | String | - | YES |
+| ALLOWED_ORIGINS | List of allowed origins in production | List as Json String | \[*\] | NO |
+| SECRET_KEY | 64 digit hexadecimal string used for encryption | String | Random Key | NO |
 | DEBUG | Is Debug Mode | Boolean as String | true | NO |
-| ALLOW_RELOAD | Pass --reload param to uvicorn run server cmd | Boolean as String | true | NO |
+| ALLOW_RELOAD | Pass --reload param to uvicorn run server cmd | Boolean as String | false | NO |
 | TEST_DB | Test Database URL | Url String | - | NO |
+
+#### Email Variables
+
+These environment variables are stored in a separate `email.env` file(Ignored by git)
+
+| NAME | DESC | TYPE | DEFAULT | REQUIRED |
+| --- | --- | --- | --- | --- |
+| EMAIL_USERNAME | Username(Generally same as FROM mail) | String | - | NO |
+| EMAIL_PASSWORD | Password | String | - | NO |
+| EMAIL_FROM | Email from which the mail is sent | Email | test@test.com | NO |
+| EMAIL_PORT | The email port | Integer | - | NO |
+| EMAIL_SERVER | The email server url | Url | - | NO |
+| EMAIL_TLS | Use TLS | Boolean as String | false | NO |
+| EMAIL_SSL | Use SSL | Boolean as String | false | NO |
 
 ### Json Schemas 
 
@@ -147,5 +161,5 @@ sh test.sh
 | `/application/{application_id}` | Approve/Reject Application | PATCH | `{"approved": BOOLEAN}` | Yes | - |  
 
 
-### Setting up docker remote interpreter for PyCharm IDE
-Checkout this [blog](https://blog.jetbrains.com/pycharm/2015/12/using-docker-in-pycharm/), to allow code inspections by the IDE without installing any packages.
+### Setting up docker remote interpreter for IDEs
+VS Code, PyCharm - [Blog](https://dev.to/alvarocavalcanti/setting-up-a-python-remote-interpreter-using-docker-1i24)

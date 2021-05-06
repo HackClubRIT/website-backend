@@ -32,13 +32,13 @@ jobs:
        - uses: actions/checkout@v2
        - name: "Install Packages"
          run: "python3 -m pip install -r requirements.txt"
-       # Linter
-       - name: "Run Linter"
-         run: "pylint app"
        # Test
        - name: "Run tests"
          run: "pytest"
          env:
           TEST_DB: "postgresql://user:password@localhost/testdb"
           DATABASE_URL: "postgresql://user:password@localhost/testdb"
-          SECRET_KEY: "09d25e094faa6ca2556c818166b7a9563b93f7099f6f0f4caa6cf63b88e8d3e7"
+       # Linter
+       - name: "Run Linter"
+         run: "pylint app"
+         
