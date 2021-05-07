@@ -13,6 +13,8 @@ class AwareDateTime(TypeDecorator):
     # pylint: disable=abstract-method
     """Custom field to handle timezones"""
 
+    cache_ok = False
+
     @property
     def python_type(self):
         """python type"""

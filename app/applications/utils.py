@@ -17,7 +17,8 @@ async def create_user_from_application(database: Session, application):
         email=application.email,
         name=application.name
     )
-    user_crud.create_user(database=database, user=user)
+    # FUTURE FEATURE
+    # user_crud.create_user(database=database, user=user)
     await send_email(
         template="application_success.html",
         body={"user": user},

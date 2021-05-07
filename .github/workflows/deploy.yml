@@ -6,6 +6,7 @@ on:
     branches: [ deploy ]
 
   workflow_dispatch:
+    branches: [ registration-deploy, deploy ]
 
 jobs:
   build:
