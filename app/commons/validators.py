@@ -6,7 +6,7 @@ import re
 
 def name_validator(name):
     """Letters and Whitespaces allowed"""
-    pattern = r"^[A-Za-z ]+$"
+    pattern = r"^[A-Za-z \.]+$"
     return re.search(pattern, name)
 
 
