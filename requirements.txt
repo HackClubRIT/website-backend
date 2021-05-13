@@ -8,7 +8,7 @@ chardet==4.0.0
 click==8.0.0
 ecdsa==0.16.1
 enum34==1.1.10
-fastapi==0.64.0
+fastapi==0.65.1
 greenlet==1.1.0
 h11==0.12.0
 httptools==0.2.0
