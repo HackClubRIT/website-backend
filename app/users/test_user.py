@@ -17,8 +17,8 @@ def test_login_and_token_fail(test_instance):
     for _, user in test_instance.users.items():
         response = test_instance.client.post(
             "/auth/token",
-            data={
-                "username": user.email,
+            json={
+                "email": user.email,
                 "password": test_instance.default_password + chr(randint(65, 90))
             }
         )

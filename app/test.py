@@ -68,8 +68,10 @@ class FeatureTest:
         """
         :returns users.schema.Token
         """
-        data = {"username": user.email, "password": self.default_password}
-        response = self.client.post("/auth/token", data=data)
+        data = {"email": user.email, "password": self.default_password}
+        response = self.client.post("/auth/token", json=data)
+        print(response.__dict__)
+        print(response.status_code)
         assert response.status_code == 200
         return Token(**response.json())
 

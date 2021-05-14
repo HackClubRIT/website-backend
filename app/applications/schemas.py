@@ -1,38 +1,15 @@
 """
 Application Serializers
 """
-# pylint: disable=no-self-argument,no-self-use
 import datetime
-from pydantic import BaseModel, validator
+from pydantic import BaseModel
 from app.applications.application_states import ApplicationStates
-from app.commons.validators import name_validator, email_validator
+from app.commons.serializer_field_mixins import NameMixin, EmailMixin
 
 
-class ApplicationBase(BaseModel):
+class ApplicationBase(NameMixin, EmailMixin):
     """Base application serializer"""
-    email: str
     data: dict
-    name: str
-
-    @validator("email")
-    def is_valid_email(cls, email):
-        """
-        Validate Email
-        :raise AssertionError
-        """
-        if email_validator(email) is None:
-            raise ValueError("Invalid Email")
-        return email
-
-    @validator("name")
-    def is_valid_name(cls, name):
-        """
-        Validate Name
-        :raise AssertionError
-        """
-        if name_validator(name) is None:
-            raise ValueError("Name contains invalid characters")
-        return name
 
 
 class ApplicationUpdate(BaseModel):

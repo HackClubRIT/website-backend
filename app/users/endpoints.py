@@ -11,7 +11,7 @@ from app.settings import JWT_ACCESS_TOKEN_EXPIRE_MINUTES
 from app.commons.mock_middleware import is_debug
 from . import crud
 from .role_mock_middleware import is_admin
-from .schemas import User, UserCreate, Token, UserUpdate, UserInDB
+from .schemas import User, UserCreate, Token, UserUpdate, UserInDB, UserLogin
 from .utils import authenticate_user, create_access_token
 
 router = APIRouter(
@@ -86,14 +86,13 @@ def delete_user(user_id: int,
 
 
 @router.post("/token", response_model=Token)
-def login_for_access_token(database: Session = Depends(get_db),
-                           form_data: OAuth2PasswordRequestForm = Depends()):
+def login_for_access_token(login_data: UserLogin, database: Session = Depends(get_db)):
     """Login Via email, password to get token"""
-    user = authenticate_user(database, form_data.username, form_data.password)
+    user = authenticate_user(database, login_data.email, login_data.password)
     if not user:
         raise HTTPException(
             status_code=status.HTTP_401_UNAUTHORIZED,
-            detail="Incorrect username or password",
+            detail="Incorrect email or password",
             headers={"WWW-Authenticate": "Bearer"},
         )
     access_token_expires = timedelta(minutes=JWT_ACCESS_TOKEN_EXPIRE_MINUTES)

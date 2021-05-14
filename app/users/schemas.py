@@ -1,45 +1,15 @@
 """
 Define serializers
 """
-# pylint: disable=no-self-argument, no-self-use
 from typing import Optional
-from pydantic import BaseModel, validator, constr
-from app.commons.validators import name_validator, email_validator
+from pydantic import BaseModel, constr
+from app.commons.serializer_field_mixins import EmailMixin, NameMixin
 from app.users.roles import Roles
 
 
-class BaseSerializer(BaseModel):
-    """
-    Common Validators
-    """
-    @validator("name", check_fields=False)
-    def is_valid_name(cls, name):
-        """
-        Is valid name?
-        :raise AssertionError
-        """
-        if name:
-            if name_validator(name) is None:
-                raise ValueError("Name contains invalid characters")
-        return name
-
-    @validator("email", check_fields=False)
-    def is_valid_email(cls, email):
-        """
-        Is valid email?
-        :raise AssertionError
-        """
-        if email:
-            if email_validator(email) is None:
-                raise ValueError("Email is invalid")
-        return email
-
-
-class UserBase(BaseSerializer):
+class UserBase(EmailMixin, NameMixin):
     """Base serializer"""
-    email: str
     role: Roles
-    name: str
 
 
 class UserCreate(UserBase):
@@ -47,7 +17,7 @@ class UserCreate(UserBase):
     password: constr(min_length=8)
 
 
-class UserUpdate(BaseSerializer):
+class UserUpdate(EmailMixin, NameMixin):
     """Update Serializer"""
     email: Optional[str]
     password: Optional[constr(min_length=8)]
@@ -66,6 +36,11 @@ class User(UserBase):
 
 class UserInDB(User):
     """Mocks User Table"""
+    password: constr(min_length=8)
+
+
+class UserLogin(EmailMixin):
+    """Login Serializer"""
     password: constr(min_length=8)
 
 
