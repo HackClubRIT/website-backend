@@ -1,6 +1,7 @@
 """
 Common Validators
 """
+# pylint: disable=no-self-argument,no-self-use
 import re
 
 from pydantic import BaseModel, validator
@@ -26,10 +27,11 @@ class EmailMixin(BaseModel):
 
     @validator("email")
     def is_valid_email(cls, email):
+        """Validate email if it exists"""
         if email:
             if not _email_validator(email):
                 raise ValueError("Invalid Email")
-            return email
+        return email
 
 
 class NameMixin(BaseModel):
@@ -38,7 +40,8 @@ class NameMixin(BaseModel):
 
     @validator("name")
     def is_valid_name(cls, name):
+        """Validate name if it exists"""
         if name:
             if not _name_validator(name):
                 raise ValueError("Invalid Name")
-            return name
+        return name

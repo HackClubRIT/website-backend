@@ -3,7 +3,6 @@ The endpoints for /auth
 """
 from datetime import timedelta
 from fastapi import Depends, HTTPException, APIRouter, status
-from fastapi.security import OAuth2PasswordRequestForm
 from sqlalchemy.orm import Session
 from app.exceptions import USER_FORBIDDEN
 from app.dependancies import get_db, get_current_user
