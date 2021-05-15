@@ -99,6 +99,7 @@ async def update_application(
                     application=updated_application
                 )
             else:
-                await send_fail_mail(updated_application)
+                pass
+                # await send_fail_mail(updated_application)
             return updated_application
         raise HTTPException(status_code=404, detail="Application not found")
