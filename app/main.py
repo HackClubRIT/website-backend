@@ -11,11 +11,12 @@ from .settings import get_origin_settings
 
 app = FastAPI()
 
+"""
 app.add_middleware(
     CORSMiddleware,
     **get_origin_settings()
 )
-
+"""
 app.include_router(user_router)
 app.include_router(application_router)
 
