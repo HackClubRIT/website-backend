@@ -171,7 +171,8 @@ def test_update_application(test_application_instance):
         )
         assert response.status_code == 200
         # Check mail
-        assert len(outbox) == 1
+        # assert len(outbox) == 1
+        assert len(outbox) == 0
 
     # Admin approves rejected application
     response = test_application_instance.client.patch(
