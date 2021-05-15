@@ -16,7 +16,7 @@ SECRET_KEY = os.environ.get("SECRET_KEY",
                             "09d25e094faa6ca2556c818166b7a9563b93f7099f6f0f4caa6cf63b88e8d3e7")
 
 ALLOWED_ORIGINS = json.loads(os.environ.get("ALLOWED_ORIGINS", "[]"))
-print(ALLOWED_ORIGINS)
+
 _EMAIL_CONF = ConnectionConfig(
     MAIL_USERNAME=os.environ.get("EMAIL_USERNAME", ""),
     MAIL_PASSWORD=os.environ.get("EMAIL_PASSWORD", ""),
