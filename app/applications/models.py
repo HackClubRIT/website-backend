@@ -3,8 +3,8 @@ Application Model
 """
 from sqlalchemy import Column, String, Integer, func, JSON, Enum
 from app.database.config_db import Base
-from .application_states import ApplicationStates
 from app.commons.model_fields import AwareDateTime
+from .application_states import ApplicationStates
 
 
 class Application(Base):

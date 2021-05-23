@@ -4,8 +4,9 @@ The test fixtures
 import pytest
 from app.applications.test_application import ApplicationTest
 from app.database.config_test_db import TESTING_SESSION_LOCAL
+from app.content.test_feedback import FeedbackTest
 from app.test import FeatureTest
-# pylint: disable=redefined-outer-name, duplicate-code
+# pylint: disable=redefined-outer-name
 
 @pytest.fixture(scope="module")
 def db_fixture():
@@ -26,3 +27,8 @@ def test_instance(db_fixture):
 def test_application_instance(db_fixture):
     """Yield a new instance of ApplicationTest everytime a new test module runs"""
     yield ApplicationTest(db_fixture)
+
+@pytest.fixture(scope="module")
+def test_feedback_instance(db_fixture):
+    """Yield a new instance of FeedbackTest everytime a new test module runs"""
+    yield FeedbackTest(db_fixture)

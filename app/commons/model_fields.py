@@ -1,3 +1,6 @@
+"""
+Common model fields
+"""
 from datetime import datetime
 from dateutil.tz import gettz
 from sqlalchemy import TypeDecorator, DateTime

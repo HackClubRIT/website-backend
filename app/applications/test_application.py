@@ -3,10 +3,11 @@ Application Tests
 """
 import json
 from random import randint
-from app.applications.schemas import ApplicationRead
+from app.applications.schemas import ApplicationRead, ApplicationBase
 from app.users.crud import get_user_by_email
 from app.test import FeatureTest
 from app.users.roles import Roles
+from .crud import create_application
 
 
 USER_READ_PERMISSIONS = {
@@ -26,7 +27,7 @@ class ApplicationTest(FeatureTest):
 
     def new_application(self, invalid_name=False, invalid_email=False):
         """
-        Create new Application with Endpoint
+        Create new Application Object
         """
         data = {
             "email": self.random_email(),
@@ -44,34 +45,10 @@ class ApplicationTest(FeatureTest):
     def additional_setup(self, **kwargs):
         for _ in range(5):
             new_application = self.new_application()
-
-            response = self.client.post("/application/", data=json.dumps(new_application))
-            assert response.status_code == 201
-            self.applications.append(ApplicationRead(**response.json()))
-
-
-    def assert_user_permissions(self, users, url, method="GET", data=None, json_=None):
-        """
-        Test the same endpoint using different credentials
-        :param users: Dict containing users and expected status codes
-        :param url: Endpoint
-        :param method: The request method
-        :param data: data of client.request
-        :param json_: json of client.request
-        """
-        methods = {
-            "GET": self.client.get,
-            "PATCH": self.client.patch,
-            "POST": self.client.post
-        }
-        for user, status_code in users.items():
-            response = methods[method](
-                url,
-                data=data,
-                json=json_,
-                headers=self.set_auth_from_user(self.users[user])
+            db_application = create_application(
+                self.database_conn, ApplicationBase(**new_application)
             )
-            assert response.status_code == status_code
+            self.applications.append(ApplicationRead(**db_application.__dict__))
 
 
 def test_view_all_applications(test_application_instance):

@@ -1,3 +1,6 @@
+"""
+Content Endpoints
+"""
 from typing import List
 from fastapi import APIRouter, Depends
 from sqlalchemy.orm import Session
@@ -27,7 +30,7 @@ async def get_feedback_by_id(feedback_id: int, database: Session = Depends(get_d
     is_at_least_role(Roles.MODERATOR, current_user)
     return crud.get_feedback_by_id(database, feedback_id)
 
-@router.post("/feedback", response_model=FeedbackRead)
+@router.post("/feedback", response_model=FeedbackRead, status_code=201)
 async def create_feedback(feedback: FeedbackBase, database: Session = Depends(get_db)):
     """Create feedback"""
     return crud.create_feedback(database, feedback)
