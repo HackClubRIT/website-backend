@@ -10,7 +10,7 @@ on:
   workflow_dispatch:
 
 jobs:
-  ci:
+  python-test:
     runs-on: ubuntu-latest
 
     services:
@@ -31,14 +31,23 @@ jobs:
     steps:
        - uses: actions/checkout@v2
        - name: "Install Packages"
-         run: "python3 -m pip install -r requirements.txt"
+         run: python3 -m pip install -r requirements.txt
        # Test
        - name: "Run tests"
-         run: "pytest"
+         run: pytest
          env:
           TEST_DB: "postgresql://user:password@localhost/testdb"
           DATABASE_URL: "postgresql://user:password@localhost/testdb"
        # Linter
        - name: "Run Linter"
-         run: "pylint app"
+         run: pylint app
          
+  docker-test:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v2
+      - name: "Build and run dockerfile"
+        # docker-compose requires an email.env file
+        run: touch email.env && docker-compose up -d
+      - name: "Test dockerfile"
+        run: sleep 2 && curl localhost:8000
