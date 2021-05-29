@@ -3,7 +3,12 @@ version: "3"
 services:
   app:
     container_name: "hackclub_backend"
-    build: .
+    build:
+      # Change only if your UID or GID != 1000
+      #args:
+      #  UID: 2000
+      #  GID: 2000
+      context: .
     env_file:
       - "development.env"
       - "email.env"
