@@ -50,4 +50,4 @@ jobs:
         # docker-compose requires an email.env file
         run: touch email.env && docker-compose up -d
       - name: "Test dockerfile"
-        run: sleep 2 && curl localhost:8000
+        run: chmod +x ./scripts/wait_for_it.sh && ./scripts/wait_for_it.sh localhost:8000
