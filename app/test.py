@@ -69,7 +69,7 @@ class FeatureTest:
         :returns users.schema.Token
         """
         data = {"username": user.email, "password": self.default_password}
-        response = self.client.post("/auth/token", data=data)
+        response = self.client.post("/auth/token/", data=data)
         assert response.status_code == 200
         return Token(**response.json())
 

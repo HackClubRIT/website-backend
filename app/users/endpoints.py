@@ -20,7 +20,7 @@ router = APIRouter(
 )
 
 
-@router.get("/user/{user_id}", response_model=User)
+@router.get("/user/{user_id}/", response_model=User)
 def get_user(user_id: int, database: Session = Depends(get_db)):
     """Get user by ID"""
     db_user = crud.get_user(database=database, user_id=user_id)
@@ -29,7 +29,7 @@ def get_user(user_id: int, database: Session = Depends(get_db)):
     return db_user
 
 
-@router.post("/user", response_model=User, status_code=201)
+@router.post("/user/", response_model=User, status_code=201)
 def create_user(user: UserCreate, database: Session = Depends(get_db)):
     """Create a new user"""
     is_debug(status_code=405)
@@ -43,7 +43,7 @@ def create_user(user: UserCreate, database: Session = Depends(get_db)):
     return crud.create_user(user=user, database=database)
 
 
-@router.patch("/user/{user_id}", response_model=User)
+@router.patch("/user/{user_id}/", response_model=User)
 def update_user_partial(user_id: int, new_user_data: UserUpdate,
                         current_user: UserInDB = Depends(get_current_user),
                         database: Session = Depends(get_db)):
@@ -72,7 +72,7 @@ def update_user_partial(user_id: int, new_user_data: UserUpdate,
     raise HTTPException(status_code=403, detail=USER_FORBIDDEN)
 
 
-@router.delete("/user/{user_id}", status_code=204)
+@router.delete("/user/{user_id}/", status_code=204)
 def delete_user(user_id: int,
                 current_user: UserInDB = Depends(get_current_user),
                 database: Session = Depends(get_db)):
@@ -85,7 +85,7 @@ def delete_user(user_id: int,
         raise HTTPException(status_code=400, detail="User not found")
 
 
-@router.post("/token", response_model=Token)
+@router.post("/token/", response_model=Token)
 def login_for_access_token(database: Session = Depends(get_db),
                            form_data: OAuth2PasswordRequestForm = Depends()):
     """Login Via email, password to get token"""
@@ -103,7 +103,7 @@ def login_for_access_token(database: Session = Depends(get_db),
     return {"access_token": access_token, "token_type": "bearer"}
 
 
-@router.get("/check", status_code=204)
+@router.get("/check/", status_code=204)
 def is_authenticated(_: UserInDB = Depends(get_current_user)):
     """Check Auth"""
     return None

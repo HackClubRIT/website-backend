@@ -34,7 +34,7 @@ def view_all_pending_applications(database: Session = Depends(get_db),
         return crud.get_pending_applications(database)
 
 
-@router.get("/{application_id}", response_model=ApplicationRead)
+@router.get("/{application_id}/", response_model=ApplicationRead)
 def view_application(application_id: int, database: Session = Depends(get_db),
                      current_user: UserInDB = Depends(get_current_user)):
     """View an application"""
@@ -73,7 +73,7 @@ def create_application(application: ApplicationBase, database: Session = Depends
     return crud.create_application(database=database, application=application)
 
 
-@router.patch("/{application_id}")
+@router.patch("/{application_id}/")
 async def update_application(
         application_id: int,
         data: ApplicationUpdate,

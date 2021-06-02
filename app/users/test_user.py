@@ -16,7 +16,7 @@ def test_login_and_token_fail(test_instance):
     """Test POST /auth/user Fail Case"""
     for _, user in test_instance.users.items():
         response = test_instance.client.post(
-            "/auth/token",
+            "/auth/token/",
             data={
                 "username": user.email,
                 "password": test_instance.default_password + chr(randint(65, 90))
@@ -48,7 +48,7 @@ def test_partial_update_invalid_data(test_instance):
     for _, user in test_instance.users.items():
         for invalid_data in invalid_datas:
             response = test_instance.client.patch(
-                "/auth/user/%d" % user.id,
+                "/auth/user/%d/" % user.id,
                 json=invalid_data,
                 headers=test_instance.set_auth_from_user(user)
             )
@@ -68,7 +68,7 @@ def test_partial_update_invalid_permissions(test_instance):
         for user in other_users:
             email = test_instance.random_email()
             response = test_instance.client.patch(
-                "/auth/user/%d" % user.id,
+                "/auth/user/%d/" % user.id,
                 headers=test_instance.set_auth(token),
                 json={"email": email}
             )
@@ -84,14 +84,14 @@ def test_partial_update_success(test_instance):
     for _, user in test_instance.users.items():
         # Admin Update
         response = test_instance.client.patch(
-            "/auth/user/%d" % user.id,
+            "/auth/user/%d/" % user.id,
             headers=test_instance.set_auth(test_instance.get_token(admin_user)),
             json={"name": test_instance.random_string()}
         )
         assert response.status_code == 200
         # Self Update
         response = test_instance.client.patch(
-            "/auth/user/%d" % user.id,
+            "/auth/user/%d/" % user.id,
             headers=test_instance.set_auth_from_user(user),
             json={"name": test_instance.random_string()}
         )
@@ -109,7 +109,7 @@ def test_delete(test_instance):
 
     # Test if admin can delete any user
     response = test_instance.client.delete(
-        "/auth/user/%d" % normal_user.id,
+        "/auth/user/%d/" % normal_user.id,
         headers=test_instance.set_auth(test_instance.get_token(admin_user))
     )
     assert response.status_code == 204
@@ -118,7 +118,7 @@ def test_delete(test_instance):
 
     # Test if a user can delete itself
     response = test_instance.client.delete(
-        "/auth/user/%d" % mod_user.id,
+        "/auth/user/%d/" % mod_user.id,
         headers=test_instance.set_auth(test_instance.get_token(mod_user))
     )
     assert response.status_code == 204
