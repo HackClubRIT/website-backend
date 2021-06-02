@@ -146,19 +146,33 @@ These environment variables are stored in a separate `email.env` file(Ignored by
   "name": STRING
 }
 ```
+#### FeedbackView
+```
+{
+  "id": INTEGER,
+  "content": STRING,
+  "created_time": DATETIME
+}
+```
 
 
 ### Endpoints
+
+**NOTE: All urls contain trailing /**
+
 | URL | DESCRIPTION |METHOD | PARAMS | AUTHENTICATED | RESPONSE |
 | --- | --- | --- | --- | --- | --- |
-| `/auth/user/{user_id}` | Get User By ID | GET | - | No | [User](#user-receive) |
-| `/auth/user` | Create new User(DEBUG ONLY) | POST | [UserCreate](#user-create) | No | [User](#user-receive) |
-| `/auth/user/{user_id}` | Update Existing User | PATCH | [UserUpdate](#user-update) | Yes |  [User](#user-receive) |
-| `/auth/user/{user_id}` | Soft Delete User By ID | DELETE | - | Yes |  - |
-| `/auth/token` | Return token by submitting credentials | POST | `{"email": STRING, "password": STRING}` | No | `{"access_token": "string", "token_type": "string"}` |
-| `/application` | View all pending applications | GET | - | Yes | [List(ApplicationView)](#applicationview) |
-| `/application/{application_id}` | View application by ID | GET | - | No | [ApplicationView](#applicationview) |
-| `/application/{application_id}` | Approve/Reject Application | PATCH | `{"approved": BOOLEAN}` | Yes | - |  
+| `/auth/user/{user_id}/` | Get User By ID | GET | - | No | [User](#user-receive) |
+| `/auth/user/` | Create new User(DEBUG ONLY) | POST | [UserCreate](#user-create) | No | [User](#user-receive) |
+| `/auth/user/{user_id}/` | Update Existing User | PATCH | [UserUpdate](#user-update) | Yes |  [User](#user-receive) |
+| `/auth/user/{user_id}/` | Soft Delete User By ID | DELETE | - | Yes |  - |
+| `/auth/token/` | Return token by submitting credentials | POST | `{"email": STRING, "password": STRING}` | No | `{"access_token": "string", "token_type": "string"}` |
+| `/application/` | View all pending applications | GET | - | Yes | [List(ApplicationView)](#applicationview) |
+| `/application/{application_id}/` | View application by ID | GET | - | No | [ApplicationView](#applicationview) |
+| `/application/{application_id}/` | Approve/Reject Application | PATCH | `{"approved": BOOLEAN}` | Yes | - |  
+| `/content/feedback/` | Get all feedbacks | GET | - | No | [List(FeedbackView)](#feedbackview) |  
+| `/content/feedback/{feedback_id}/` | View feedback by ID | GET | - | No | [FeedbackView](#feedbackview) |  
+| `/content/feedback/` | Create a feedback | POST | `{"content": STRING}` | No | [FeedbackView](#feedbackview) |  
 
 
 ### Setting up docker remote interpreter for IDEs

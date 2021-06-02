@@ -24,11 +24,13 @@ class FeedbackTest(FeatureTest):
                 )
             )
 
+
 USER_READ_FEEDBACK_STATUS_CODE = {
     Roles.ADMIN: 200,
     Roles.MODERATOR: 200,
     Roles.USER: 403
 }
+
 
 def test_get_all_feedbacks(test_feedback_instance: FeedbackTest):
     """
@@ -36,8 +38,9 @@ def test_get_all_feedbacks(test_feedback_instance: FeedbackTest):
     """
     test_feedback_instance.assert_user_permissions(
         USER_READ_FEEDBACK_STATUS_CODE,
-        "/content/feedback",
+        "/content/feedback/",
     )
+
 
 def test_get_application_by_id(test_feedback_instance: FeedbackTest):
     """
@@ -46,8 +49,9 @@ def test_get_application_by_id(test_feedback_instance: FeedbackTest):
     for feedback in test_feedback_instance.feedbacks:
         test_feedback_instance.assert_user_permissions(
             USER_READ_FEEDBACK_STATUS_CODE,
-            "/content/feedback/%d"%feedback.id,
+            "/content/feedback/%d/" % feedback.id,
         )
+
 
 def test_create_application(test_feedback_instance: FeedbackTest):
     """
@@ -55,7 +59,7 @@ def test_create_application(test_feedback_instance: FeedbackTest):
     """
     feedback = FeedbackBase(content=test_feedback_instance.random_string())
     response = test_feedback_instance.client.post(
-        "/content/feedback",
+        "/content/feedback/",
         data=feedback.json(),
     )
     assert response.status_code == 201

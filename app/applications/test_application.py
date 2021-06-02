@@ -56,12 +56,12 @@ def test_view_all_applications(test_application_instance):
     TEST GET /application
     """
     # Unauthenticated
-    response = test_application_instance.client.get("/application")
+    response = test_application_instance.client.get("/application/")
     assert response.status_code == 401
 
     test_application_instance.assert_user_permissions(
         USER_READ_PERMISSIONS,
-        "/application"
+        "/application/"
     )
 
 
@@ -72,12 +72,12 @@ def test_view_application(test_application_instance):
 
     for application in test_application_instance.applications:
         # Unauthenticated
-        response = test_application_instance.client.get("/application/%d" % application.id)
+        response = test_application_instance.client.get("/application/%d/" % application.id)
         assert response.status_code == 401
 
         test_application_instance.assert_user_permissions(
             USER_READ_PERMISSIONS,
-            url="/application/%d" % application.id,
+            url="/application/%d/" % application.id,
         )
 
 
@@ -106,12 +106,12 @@ def test_update_application(test_application_instance):
     application = test_application_instance.applications[0]
     # Unauthenticated
     response = test_application_instance.client.patch(
-        "/application/%d" % application.id
+        "/application/%d/" % application.id
     )
     assert response.status_code == 401
     # Not Acceptable
     response = test_application_instance.client.patch(
-        "/application/%d" % application.id,
+        "/application/%d/" % application.id,
         json={"approved": "ACCEPTED"},
         headers=test_application_instance.
             set_auth_from_user(test_application_instance.users[Roles.ADMIN])
@@ -121,7 +121,7 @@ def test_update_application(test_application_instance):
     with test_application_instance.mail_instance.record_messages() as outbox:
         application = test_application_instance.applications[1]
         response = test_application_instance.client.patch(
-            "/application/%d" % application.id,
+            "/application/%d/" % application.id,
             json={"approved": True},
             headers=test_application_instance.
                 set_auth_from_user(test_application_instance.users[Roles.ADMIN])
@@ -138,7 +138,7 @@ def test_update_application(test_application_instance):
         # Admin reject
         application = test_application_instance.applications[2]
         response = test_application_instance.client.patch(
-            "/application/%d" % application.id,
+            "/application/%d/" % application.id,
             json={"approved": False},
             headers=test_application_instance.
                 set_auth_from_user(test_application_instance.users[Roles.ADMIN])
@@ -149,7 +149,7 @@ def test_update_application(test_application_instance):
 
     # Admin approves rejected application
     response = test_application_instance.client.patch(
-        "/application/%d" % application.id,
+        "/application/%d/" % application.id,
         json={"approved": True},
         headers=test_application_instance.
             set_auth_from_user(test_application_instance.users[Roles.ADMIN])
@@ -164,6 +164,6 @@ def test_update_application(test_application_instance):
         test_application_instance.assert_user_permissions(
             users,
             method="PATCH",
-            url="/application/%d" % application.id,
+            url="/application/%d/" % application.id,
             json_={"approved": randint(0, 9) > 4}
         )

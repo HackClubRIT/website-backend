@@ -50,8 +50,6 @@ class FeatureTest:
                 role=role
             )
             db_user = create_user(self.database_conn, user=self.users[role])
-            #response = self.client.post("/auth/user", data=self.users[role].json())
-            #assert response.status_code == 201
             self.users[role] = User(**db_user.__dict__)
 
     def assert_user_permissions(self, users, url, method="GET", data=None, json_=None):
@@ -92,7 +90,7 @@ class FeatureTest:
         :returns users.schema.Token
         """
         data = {"email": user.email, "password": self.default_password}
-        response = self.client.post("/auth/token", json=data)
+        response = self.client.post("/auth/token/", json=data)
         print(response.__dict__)
         print(response.status_code)
         assert response.status_code == 200
