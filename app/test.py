@@ -85,15 +85,17 @@ class FeatureTest:
         """
         return self.set_auth(self.get_token(user))
 
-    def get_token(self, user):
+    def get_token(self, user, fail_case=False):
         """
         :returns users.schema.Token
         """
-        data = {"email": user.email, "password": self.default_password}
-        response = self.client.post("/auth/token/", json=data)
-        print(response.__dict__)
-        print(response.status_code)
-        assert response.status_code == 200
+        data = {"username": user.email, "password": self.default_password}
+        response = self.client.post("/auth/token/", data=data,
+                                    headers={"Content-Type": "application/x-www-form-urlencoded"})
+        if not fail_case:
+            assert response.status_code == 200
+        if fail_case and response.status_code != 200:
+            return True
         return Token(**response.json())
 
     @staticmethod
