@@ -2,15 +2,22 @@
 Content Endpoints
 """
 from typing import List
-from fastapi import APIRouter, Depends
+from fastapi import APIRouter, Depends, UploadFile, File
 from sqlalchemy.orm import Session
 from app.dependancies import get_current_user, get_db
 from app.users.roles import Roles
 from app.users.schemas import UserInDB
 from app.users.role_mock_middleware import is_at_least_role
 from . import crud
-from .schemas import FeedbackBase, FeedbackRead, EventReadSerializer, EventBaseSerializer, EventUpdateSerializer
-from .utilities import verify_user_permissions_to_update_event
+from .schemas import (
+    FeedbackBase,
+    FeedbackRead,
+    EventReadSerializer,
+    EventBaseSerializer,
+    EventUpdateSerializer,
+    ImageReadSerializer)
+from .utilities import (verify_user_permissions_to_update_event,
+                        validate_image, handle_uploaded_image)
 
 router = APIRouter(
     prefix="/content",
@@ -54,7 +61,8 @@ def get_event_by_id(event_id: int, database: Session = Depends(get_db)):
     return crud.get_event_by_id(database, event_id)
 
 
-@router.post("/events/", response_model=EventReadSerializer, status_code=201)
+@router.post("/events/", response_model=EventReadSerializer,
+             status_code=201)
 def create_event(event: EventBaseSerializer, user=Depends(get_current_user),
                  database: Session = Depends(get_db)):
     """Create event"""
@@ -85,3 +93,13 @@ def delete_event(event_id: int, user=Depends(get_current_user),
         user=user)
 
     crud.delete_event(database, event_id, db_event)
+
+
+@router.post("/image/", response_model=ImageReadSerializer)
+async def upload_image(img: UploadFile = File(...), _=Depends(get_current_user),
+                       database: Session = Depends(get_db)):
+    """
+    Upload image endpoint
+    """
+    validate_image(img)
+    return await handle_uploaded_image(img, database)

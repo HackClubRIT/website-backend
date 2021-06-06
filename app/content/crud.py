@@ -1,12 +1,12 @@
 """
 CRUD Feedbacks, Events
 """
-import pytz
 from datetime import datetime
+import pytz
 from sqlalchemy.orm import Session
 from app.database.database import commit_changes_to_object, update_instance
 from app.settings import TZ
-from .models import Feedback, Event
+from .models import Feedback, Event, Image
 from . import schemas
 
 
@@ -76,3 +76,12 @@ def delete_event(database: Session, event_id: int, db_event: Event = None):
         db_event = get_event_by_id(database, event_id)
     database.delete(db_event)
     commit_changes_to_object(database, db_event)
+
+
+def create_image(database: Session, img_url: str):
+    """
+    Create image in db
+    """
+    db_image = Image(url=img_url)
+    commit_changes_to_object(database,  db_image)
+    return db_image

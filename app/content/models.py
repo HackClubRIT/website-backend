@@ -3,7 +3,6 @@ The event model
 """
 from sqlalchemy import Column, String, func, Integer, ForeignKey
 from sqlalchemy.orm import relationship
-
 from app.commons.model_fields import AwareDateTime
 from app.database.config_db import Base
 
@@ -24,6 +23,16 @@ class Event(Base):
     registration_link = Column(String, nullable=False)
     name = Column(String, nullable=False)
     description = Column(String, nullable=False)
-    image_url = Column(String, nullable=False)
+    image_id = Column(Integer, ForeignKey("images.id"), nullable=False)
     user_id = Column(Integer, ForeignKey("users.id"))
-    user = relationship("User")
+    user = relationship("User", lazy="joined")
+    image = relationship("Image", lazy="joined")
+
+
+class Image(Base):
+    """
+    Image Model
+    """
+    __tablename__ = "images"
+    id = Column(Integer, primary_key=True)
+    url = Column(String, nullable=False)

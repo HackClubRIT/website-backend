@@ -24,11 +24,6 @@ class UserUpdate(EmailMixin, NameMixin):
     name: Optional[str]
 
 
-class UserMinimal(NameMixin):
-    """Minimal User Serializer for author fields"""
-    id: int
-
-
 class User(UserBase):
     """User read serializer(ORM)"""
     id: int

@@ -1,34 +1,55 @@
+"""
+Test Event Application
+"""
+# pylint: disable=use-a-generator
 import datetime
-import json
 from random import randint
-from time import sleep
-
 from app.test import FeatureTest
 from app.users.roles import Roles
-from .crud import create_event, get_event_by_id, get_all_events
-from .schemas import EventBaseSerializer
 from app.users.crud import create_user, get_user
 from app.users.schemas import UserCreate
+from .crud import create_event, get_event_by_id, get_all_events, create_image
+from .schemas import EventBaseSerializer
 
 
 class EventTest(FeatureTest):
+    """
+    Event Test Utils
+    """
     def __init__(self, database):
         self.events = []
         super().__init__(database)
 
-    def create_event_object(self):
+    def create_image(self):
+        """
+        Create an image in DB
+        """
+        return create_image(database=self.database_conn,
+                            img_url="https://%s.com" % self.random_string())
+
+    def create_event_object(self, image_id=None):
+        """
+        Create event object (Not saved in DB)
+        """
+        if image_id is None:
+            image_id = self.create_image().id
         date = datetime.datetime.now() + datetime.timedelta(days=-1 * randint(0, 2))
         return EventBaseSerializer(
             name=self.random_string(),
             registration_link="https://%s.com" % self.random_string(),
             description=self.random_string(),
             date=date.strftime("%Y-%m-%dT%H:%M:%S"),
-            image_url="https://%s.com" % self.random_string(),
+            image_id=image_id,
         )
 
     def additional_setup(self, **kwargs):
+        """
+        Create Test Events
+        """
+        image = self.create_image()
         self.events = [
-            create_event(self.database_conn, self.create_event_object(), self.users[Roles.ADMIN])
+            create_event(self.database_conn, self.create_event_object(image.id),
+                         self.users[Roles.ADMIN])
             for _ in range(10)]
 
 
@@ -76,6 +97,9 @@ def test_event_create(test_event_instance: EventTest):
 
 
 def update_event(test_instance, event, user_id, success):
+    """
+    Utility fn to update an event
+    """
     user = get_user(database=test_instance.database_conn, user_id=user_id)
     new_name = test_instance.random_string()
     response = test_instance.client.patch(
@@ -92,6 +116,9 @@ def update_event(test_instance, event, user_id, success):
 
 
 def test_event_update(test_event_instance: EventTest):
+    """
+    TEST PATCH /content/events/{event.id}
+    """
     mod_event = create_event(database=test_event_instance.database_conn,
                              event=test_event_instance.create_event_object(),
                              current_user=test_event_instance.users[Roles.MODERATOR])

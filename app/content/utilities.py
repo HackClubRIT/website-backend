@@ -1,8 +1,16 @@
-from fastapi import HTTPException
-from app.content.crud import get_event_by_id
+"""
+Content utils
+"""
+import uuid
+import aiofiles
+from fastapi import HTTPException, UploadFile
+from app.content.crud import get_event_by_id, create_image
 from app.exceptions import USER_FORBIDDEN
+from app.settings import DEBUG
 from app.users.role_mock_middleware import is_at_least_role
 from app.users.roles import Roles
+
+IMG_MIMES = ("image/jpeg", "image/png")
 
 
 def verify_user_permissions_to_update_event(user, event_id, database):
@@ -19,3 +27,32 @@ def verify_user_permissions_to_update_event(user, event_id, database):
             detail=USER_FORBIDDEN)
 
     return db_event
+
+
+def validate_image(img: UploadFile):
+    """
+    Check if file is valid image
+    """
+    if img.content_type not in IMG_MIMES:
+        raise HTTPException(
+            status_code=422,
+            detail="Image should be either JPG/PNG format"
+        )
+    return True
+
+
+async def handle_uploaded_image(img: UploadFile, database):
+    """
+    Store File To Cloud and Db
+    """
+    if DEBUG:
+        host = "http://127.0.0.1:8000"
+        base_dir = "app/images"
+        new_file_name = str(uuid.uuid4()) + "." + img.filename.split(".")[-1]
+        async with aiofiles.open("%s/%s" % (base_dir, new_file_name), 'wb') as out_file:
+            while content := await img.read(1024):
+                await out_file.write(content)
+        url = "%s/images/%s" % (host, new_file_name)
+
+        return create_image(database=database, img_url=url)
+    # TODO Cloud upload

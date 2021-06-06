@@ -11,7 +11,7 @@ from app.settings import JWT_ACCESS_TOKEN_EXPIRE_MINUTES
 from app.commons.mock_middleware import is_debug
 from . import crud
 from .role_mock_middleware import is_admin
-from .schemas import User, UserCreate, Token, UserUpdate, UserInDB, UserLogin
+from .schemas import User, UserCreate, Token, UserUpdate, UserInDB
 from .utils import authenticate_user, create_access_token
 
 router = APIRouter(
