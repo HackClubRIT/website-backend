@@ -2,11 +2,10 @@
 Content Schemas
 """
 import datetime
-from typing import Optional
-
-from pydantic import BaseModel, AnyUrl
+from typing import Optional, Any
+from pydantic import BaseModel, AnyUrl, validator
 from app.commons.serializer_field_mixins import NameMixin
-from app.users.schemas import UserMinimal
+from app.users.schemas import UserMinimal, User
 
 
 class FeedbackBase(BaseModel):
@@ -29,19 +28,27 @@ class EventBaseSerializer(NameMixin):
     registration_link: AnyUrl
     description: str
     date: datetime.datetime
+    image_url: AnyUrl
 
 
 class EventUpdateSerializer(NameMixin):
+    """Event Update Serializer"""
     name: Optional[str]
     registration_link: Optional[AnyUrl]
     description: Optional[str]
     date: Optional[datetime.datetime]
+    image_url: Optional[AnyUrl]
 
 
 class EventReadSerializer(EventBaseSerializer):
     """Event Read from db serializer"""
     image_url: AnyUrl
-    user: UserMinimal
+    user: User
+    id: int
+
+    @validator("user")
+    def abstract_user(cls, user):
+        return UserMinimal(name=user.name, id=user.id)
 
     class Config:
         """Enable ORM"""

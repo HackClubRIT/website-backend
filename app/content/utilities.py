@@ -13,7 +13,7 @@ def verify_user_permissions_to_update_event(user, event_id, database):
     """
     is_at_least_role(Roles.MODERATOR, user)
     db_event = get_event_by_id(database, event_id)
-    if db_event.user_id != user.id or user.role != Roles.ADMIN:
+    if db_event.user_id != user.id and user.role != Roles.ADMIN:
         raise HTTPException(
             status_code=403,
             detail=USER_FORBIDDEN)

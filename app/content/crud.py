@@ -34,17 +34,17 @@ def get_all_events(database: Session):
 
 def get_upcoming_events(database: Session):
     """Get upcoming events"""
-    return database.query(Event).filter(Event.date >= datetime.now(pytz.timezone(TZ)))
+    return database.query(Event).filter(Event.date >= datetime.now(pytz.timezone(TZ))).all()
 
 
 def get_event_by_id(database: Session, event_id: int):
     """Get event by id"""
-    return database.query(Event).filter(Event.id == event_id)
+    return database.query(Event).filter(Event.id == event_id).first()
 
 
 def create_event(database: Session, event: schemas.EventBaseSerializer, current_user):
     """Create Event"""
-    db_event = Event(**event.json())
+    db_event = Event(**event.dict())
     db_event.user_id = current_user.id
     commit_changes_to_object(database=database, obj=db_event)
     return db_event

@@ -2,7 +2,7 @@
 Content Endpoints
 """
 from typing import List
-from fastapi import APIRouter, Depends, HTTPException
+from fastapi import APIRouter, Depends
 from sqlalchemy.orm import Session
 from app.dependancies import get_current_user, get_db
 from app.users.roles import Roles
@@ -11,7 +11,6 @@ from app.users.role_mock_middleware import is_at_least_role
 from . import crud
 from .schemas import FeedbackBase, FeedbackRead, EventReadSerializer, EventBaseSerializer, EventUpdateSerializer
 from .utilities import verify_user_permissions_to_update_event
-from ..exceptions import USER_FORBIDDEN
 
 router = APIRouter(
     prefix="/content",
@@ -55,7 +54,7 @@ def get_event_by_id(event_id: int, database: Session = Depends(get_db)):
     return crud.get_event_by_id(database, event_id)
 
 
-@router.post("/events/", response_model=EventReadSerializer)
+@router.post("/events/", response_model=EventReadSerializer, status_code=201)
 def create_event(event: EventBaseSerializer, user=Depends(get_current_user),
                  database: Session = Depends(get_db)):
     """Create event"""
@@ -63,23 +62,11 @@ def create_event(event: EventBaseSerializer, user=Depends(get_current_user),
     return crud.create_event(database, event, user)
 
 
-@router.patch("/events/{event_id}/image", response_model=EventReadSerializer)
-def upload_image(event_id: int, user=Depends(get_current_user),
-                 database: Session = Depends(get_db)):
-
-    db_event = verify_user_permissions_to_update_event(
-        event_id=event_id,
-        database=database,
-        user=user)
-
-    # TODO Handle Image
-    return db_event
-
-
 @router.patch("/events/{event_id}/", response_model=EventReadSerializer)
-def edit_non_image_event_data(event_id: int, event: EventUpdateSerializer,
-                              user=Depends(get_current_user),
-                              database: Session = Depends(get_db)):
+def edit_event(event_id: int, event: EventUpdateSerializer,
+               user=Depends(get_current_user),
+               database: Session = Depends(get_db)):
+    """Update Event"""
     db_event = verify_user_permissions_to_update_event(
         event_id=event_id,
         database=database,
@@ -91,12 +78,10 @@ def edit_non_image_event_data(event_id: int, event: EventUpdateSerializer,
 @router.delete("/events/{event_id}/", status_code=204)
 def delete_event(event_id: int, user=Depends(get_current_user),
                  database: Session = Depends(get_db)):
-
+    """Delete Event"""
     db_event = verify_user_permissions_to_update_event(
         event_id=event_id,
         database=database,
         user=user)
 
     crud.delete_event(database, event_id, db_event)
-
-    # TODO Delete image
