@@ -231,8 +231,6 @@ These environment variables are stored in a separate `email.env` file(Ignored by
 
 ### Image Upload
 
-Create an `images` folder in `./app` for local development
-
 Refer [flowchart](https://app.diagrams.net/#G1tj6X8M1Rj5z3mKeoaEpFfRRapOKb8Frn) for process flow.
 
 ### Setting up docker remote interpreter for IDEs

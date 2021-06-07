@@ -1,6 +1,7 @@
 """
 Run server
 """
+import os
 from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
 from fastapi.staticfiles import StaticFiles
@@ -22,4 +23,7 @@ app.include_router(application_router)
 app.include_router(content_router)
 
 if DEBUG:
-    app.mount("/images", StaticFiles(directory="app/images"), name="images")
+    path = "app/images"
+    if not os.path.isdir(path):
+        os.mkdir(path)
+    app.mount("/images", StaticFiles(directory=path), name="images")
