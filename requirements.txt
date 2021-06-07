@@ -50,3 +50,4 @@ wrapt==1.12.1
 pytz==2021.1
 fastapi-mail==0.3.7
 aiofiles==0.7.0
+cloudinary==1.25.0

@@ -4,9 +4,10 @@ Content utils
 import uuid
 import aiofiles
 from fastapi import HTTPException, UploadFile
+from cloudinary.uploader import upload
 from app.content.crud import get_event_by_id, create_image
 from app.exceptions import USER_FORBIDDEN
-from app.settings import DEBUG
+from app.settings import DEBUG, CLOUDINARY_OVERRIDE
 from app.users.role_mock_middleware import is_at_least_role
 from app.users.roles import Roles
 
@@ -45,7 +46,7 @@ async def handle_uploaded_image(img: UploadFile, database):
     """
     Store File To Cloud and Db
     """
-    if DEBUG:
+    if DEBUG and not CLOUDINARY_OVERRIDE:
         host = "http://127.0.0.1:8000"
         base_dir = "app/images"
         new_file_name = str(uuid.uuid4()) + "." + img.filename.split(".")[-1]
@@ -53,6 +54,11 @@ async def handle_uploaded_image(img: UploadFile, database):
             while content := await img.read(1024):
                 await out_file.write(content)
         url = "%s/images/%s" % (host, new_file_name)
-
         return create_image(database=database, img_url=url)
-    # TODO Cloud upload
+
+    img_bytes = bytearray()
+    while content := await img.read(1024):
+        img_bytes += content
+
+    upload_res = upload(img_bytes)
+    return create_image(database=database, img_url=upload_res["secure_url"])

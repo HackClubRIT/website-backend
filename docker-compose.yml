@@ -12,6 +12,7 @@ services:
     env_file:
       - "development.env"
       - "email.env"
+      - "cloudinary.env"
     volumes:
     - "./app:/src/app"
     - "./alembic:/src/alembic"
@@ -21,6 +22,7 @@ services:
       - db
 
   db:
+    container_name: "hackclub-db"
     image: postgres:13-alpine
     environment:
       POSTGRES_USER: "user"

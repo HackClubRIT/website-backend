@@ -48,6 +48,6 @@ jobs:
       - uses: actions/checkout@v2
       - name: "Build and run dockerfile"
         # docker-compose requires an email.env file
-        run: touch email.env && docker-compose up -d
+        run: touch email.env && touch cloudinary.env && docker-compose up -d
       - name: "Test dockerfile"
         run: chmod +x ./scripts/wait_for_it.sh && ./scripts/wait_for_it.sh localhost:8000
