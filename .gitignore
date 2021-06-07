@@ -1,4 +1,6 @@
 .idea
 __pycache__
 db-data
-email.env
+*.env
+!development.env
+images

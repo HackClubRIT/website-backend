@@ -23,3 +23,12 @@ def commit_changes_to_object(database, obj):
     database.add(obj)
     database.commit()
     database.refresh(obj)
+
+
+def update_instance(database, db_obj, serializer_obj):
+    """Update the database object from serializer"""
+    for var, value in vars(serializer_obj).items():
+        if value:
+            setattr(db_obj, var, value)
+
+    commit_changes_to_object(database, db_obj)

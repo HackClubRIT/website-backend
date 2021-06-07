@@ -9,7 +9,7 @@ from app.database.config_test_db import engine
 from app.main import app
 from app.dependancies import get_test_db, get_db
 from app.users.roles import Roles
-from .settings import fastapi_mail_instance
+from .settings import FASTAPI_MAIL_INSTANCE
 from .users.crud import create_user
 from .users.schemas import UserCreate, User, Token
 
@@ -29,10 +29,10 @@ class FeatureTest:
         app.dependency_overrides[get_db] = get_test_db
 
         # Dont send mail
-        fastapi_mail_instance.config.SUPPRESS_SEND = 1
+        FASTAPI_MAIL_INSTANCE.config.SUPPRESS_SEND = 1
 
         self.client = TestClient(app)
-        self.mail_instance = fastapi_mail_instance
+        self.mail_instance = FASTAPI_MAIL_INSTANCE
         self.users = {}
         self.database_conn = database
         self.default_password = FeatureTest.random_string(randint(8, 20))
@@ -85,15 +85,17 @@ class FeatureTest:
         """
         return self.set_auth(self.get_token(user))
 
-    def get_token(self, user):
+    def get_token(self, user, fail_case=False):
         """
         :returns users.schema.Token
         """
-        data = {"email": user.email, "password": self.default_password}
-        response = self.client.post("/auth/token/", json=data)
-        print(response.__dict__)
-        print(response.status_code)
-        assert response.status_code == 200
+        data = {"username": user.email, "password": self.default_password}
+        response = self.client.post("/auth/token/", data=data,
+                                    headers={"Content-Type": "application/x-www-form-urlencoded"})
+        if not fail_case:
+            assert response.status_code == 200
+        if fail_case and response.status_code != 200:
+            return True
         return Token(**response.json())
 
     @staticmethod

@@ -2,6 +2,7 @@
 Test user module
 """
 from random import randint
+from app.users.crud import get_user
 from app.users.roles import Roles
 
 
@@ -15,14 +16,7 @@ def test_get_user(test_instance):
 def test_login_and_token_fail(test_instance):
     """Test POST /auth/user Fail Case"""
     for _, user in test_instance.users.items():
-        response = test_instance.client.post(
-            "/auth/token/",
-            json={
-                "email": user.email,
-                "password": test_instance.default_password + chr(randint(65, 90))
-            }
-        )
-        assert response.status_code == 401
+        assert test_instance.get_token(user, fail_case=True)
 
 
 def test_login_and_token_success(test_instance):
@@ -35,7 +29,7 @@ def test_login_and_token_success(test_instance):
 
 def test_partial_update_invalid_data(test_instance):
     """
-    Test PATCH /auth/user/:userId
+    Test PATCH /auth/user/:userId/
     Only with invalid data
     """
     invalid_name_and_email = test_instance.random_string(assure_num=True)
@@ -57,7 +51,7 @@ def test_partial_update_invalid_data(test_instance):
 
 def test_partial_update_invalid_permissions(test_instance):
     """
-    Test PATCH /auth/user/:userId
+    Test PATCH /auth/user/:userId/
     Invalid permissions
     """
     non_auth_users = [user for role, user in test_instance.users.items() if role != Roles.ADMIN]
@@ -75,32 +69,59 @@ def test_partial_update_invalid_permissions(test_instance):
             assert response.status_code == 403
 
 
+def update_user(test_instance, updated_user, authenticated_user):
+    """
+    Utility func to update user
+    :param test_instance: FeatureTest instance
+    :param updated_user: User to be updated
+    :param authenticated_user: User authenticated
+    """
+    new_name = test_instance.random_string()
+    response = test_instance.client.patch(
+        "/auth/user/%d/" % updated_user.id,
+        headers=test_instance.set_auth(test_instance.get_token(authenticated_user)),
+        json={"name": new_name},
+    )
+    assert response.status_code == 200
+    assert get_user(test_instance.database_conn, updated_user.id).name == new_name
+
+
 def test_partial_update_success(test_instance):
     """
-    Test PATCH /auth/user/:userId
+    Test PATCH /auth/user/:userId/
     Success Case
     """
+    # Admin Update
     admin_user = test_instance.users[Roles.ADMIN]
     for _, user in test_instance.users.items():
-        # Admin Update
-        response = test_instance.client.patch(
-            "/auth/user/%d/" % user.id,
-            headers=test_instance.set_auth(test_instance.get_token(admin_user)),
-            json={"name": test_instance.random_string()}
-        )
-        assert response.status_code == 200
-        # Self Update
-        response = test_instance.client.patch(
-            "/auth/user/%d/" % user.id,
-            headers=test_instance.set_auth_from_user(user),
-            json={"name": test_instance.random_string()}
-        )
-        assert response.status_code == 200
+        update_user(test_instance, user, admin_user)
+
+    # Self Update
+    for _, user in test_instance.users.items():
+        update_user(test_instance, user, user)
+
+
+def delete_user(test_instance, deleted_user, authenticated_user):
+    """
+    Utility func to delete user
+    :param test_instance: FeatureTest Instance
+    :param deleted_user: User to be deleted
+    :param authenticated_user: User authenticated
+    """
+    response = test_instance.client.delete(
+        "/auth/user/%d/" % deleted_user.id,
+        headers=test_instance.set_auth(test_instance.get_token(authenticated_user))
+    )
+
+    assert response.status_code == 204
+    assert get_user(test_instance.database_conn, deleted_user.id) is None
+    response = test_instance.client.get("/auth/user/%d/" % deleted_user.id)
+    assert response.status_code == 404
 
 
 def test_delete(test_instance):
     """
-    Test DELETE /auth/user/:userId
+    Test DELETE /auth/user/:userId/
     Success Case
     """
     admin_user = test_instance.users[Roles.ADMIN]
@@ -108,19 +129,7 @@ def test_delete(test_instance):
     normal_user = test_instance.users[Roles.USER]
 
     # Test if admin can delete any user
-    response = test_instance.client.delete(
-        "/auth/user/%d/" % normal_user.id,
-        headers=test_instance.set_auth(test_instance.get_token(admin_user))
-    )
-    assert response.status_code == 204
-    response = test_instance.client.get("/auth/user/%d/" % normal_user.id)
-    assert response.status_code == 404
+    delete_user(test_instance, normal_user, admin_user)
 
     # Test if a user can delete itself
-    response = test_instance.client.delete(
-        "/auth/user/%d/" % mod_user.id,
-        headers=test_instance.set_auth(test_instance.get_token(mod_user))
-    )
-    assert response.status_code == 204
-    response = test_instance.client.get("/auth/user/%d/" % mod_user.id)
-    assert response.status_code == 404
+    delete_user(test_instance, mod_user, mod_user)

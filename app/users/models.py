@@ -10,8 +10,8 @@ class User(Base):
     """The user model"""
     __tablename__ = "users"
     id = Column(Integer, primary_key=True)
-    name = Column(String)
-    email = Column(String, unique=True)
-    password = Column(String)
-    is_active = Column(Boolean, default=True)
-    role = Column(Enum(Roles), default=Roles.USER)
+    name = Column(String, nullable=False)
+    email = Column(String, unique=True, nullable=False)
+    password = Column(String, nullable=False)
+    is_active = Column(Boolean, default=True, nullable=False)
+    role = Column(Enum(Roles), default=Roles.USER, nullable=False)

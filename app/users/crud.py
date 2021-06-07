@@ -7,7 +7,7 @@ CRUD the user table & hashing passwords
 from sqlalchemy.orm import Session
 from passlib.context import CryptContext
 from . import models, schemas
-from ..database.database import commit_changes_to_object
+from ..database.database import commit_changes_to_object, update_instance
 
 pwd_context = CryptContext(schemes=["bcrypt"], deprecated="auto")
 
@@ -67,11 +67,7 @@ def update_user(database: Session, user_updated: schemas.UserUpdate, user_id: in
     if getattr(user_updated, "password"):
         user_updated.password = hash_password(user_updated.password)
 
-    for var, value in vars(user_updated).items():
-        if value:
-            setattr(db_user, var, value)
-
-    commit_changes_to_object(database, db_user)
+    update_instance(database, db_obj=db_user, serializer_obj=user_updated)
     return db_user
 
 

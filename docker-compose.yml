@@ -12,6 +12,7 @@ services:
     env_file:
       - "development.env"
       - "email.env"
+      - "cloudinary.env"
     volumes:
     - "./app:/src/app"
     - "./alembic:/src/alembic"
@@ -21,6 +22,7 @@ services:
       - db
 
   db:
+    container_name: "hackclub-db"
     image: postgres:13-alpine
     environment:
       POSTGRES_USER: "user"
@@ -36,3 +38,12 @@ services:
       POSTGRES_USER: "user"
       POSTGRES_PASSWORD: 'password'
       POSTGRES_DB: 'hackclubtestdb'
+
+  pg-admin:
+    container_name: "pg-admin-hackclub"
+    image: dpage/pgadmin4
+    ports:
+    - "9000:80"
+    environment:
+      PGADMIN_DEFAULT_EMAIL: "admin@hackclubrit.com"
+      PGADMIN_DEFAULT_PASSWORD: "password"

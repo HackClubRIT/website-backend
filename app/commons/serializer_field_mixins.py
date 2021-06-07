@@ -3,7 +3,7 @@ Common Validators
 """
 # pylint: disable=no-self-argument,no-self-use
 import re
-
+from typing import Any
 from pydantic import BaseModel, validator
 
 
@@ -45,3 +45,28 @@ class NameMixin(BaseModel):
             if not _name_validator(name):
                 raise ValueError("Invalid Name")
         return name
+
+
+class ImageMixin(BaseModel):
+    """Image field mixin"""
+    image: Any
+
+    @validator("image")
+    def get_image_url(cls, image):
+        """Get Image url"""
+        return image.url
+
+
+class UserMinimal(NameMixin):
+    """Minimal User Serializer for author fields"""
+    id: int
+
+
+class UserMinimalMixin(BaseModel):
+    """Serialize user to show only minimal data"""
+    user: Any
+
+    @validator("user")
+    def abstract_user(cls, user):
+        """Abstract User data"""
+        return UserMinimal(name=user.name, id=user.id)

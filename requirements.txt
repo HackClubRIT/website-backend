@@ -12,7 +12,7 @@ fastapi==0.65.1
 greenlet==1.1.0
 h11==0.12.0
 httptools==0.2.0
-idna==3.1
+idna<3,>=2.5
 iniconfig==1.1.1
 isort==5.8.0
 lazy-object-proxy==1.6.0
@@ -32,7 +32,7 @@ pyparsing==2.4.7
 pytest==6.2.4
 python-dateutil==2.8.1
 python-editor==1.0.4
-python-jose==3.2.0
+python-jose==3.3.0
 python-multipart==0.0.5
 pytz==2021.1
 requests==2.25.1
@@ -49,3 +49,5 @@ watchgod==0.7
 wrapt==1.12.1
 pytz==2021.1
 fastapi-mail==0.3.7
+aiofiles==0.7.0
+cloudinary==1.25.0

@@ -3,6 +3,7 @@ App Settings
 Django inspired settings file
 """
 import json
+import logging
 import os
 from fastapi_mail import ConnectionConfig, FastMail
 
@@ -10,7 +11,7 @@ DEBUG = os.environ.get("DEBUG", "true") != "false"
 
 JWT_HASH_ALGORITHM = "HS256"
 
-JWT_ACCESS_TOKEN_EXPIRE_MINUTES = 60 * 24
+JWT_ACCESS_TOKEN_EXPIRE_MINUTES = 60 * 2
 
 SECRET_KEY = os.environ.get("SECRET_KEY",
                             "09d25e094faa6ca2556c818166b7a9563b93f7099f6f0f4caa6cf63b88e8d3e7")
@@ -29,7 +30,7 @@ _EMAIL_CONF = ConnectionConfig(
     TEMPLATE_FOLDER="./app/emails"
 )
 
-fastapi_mail_instance = FastMail(_EMAIL_CONF)
+FASTAPI_MAIL_INSTANCE = FastMail(_EMAIL_CONF)
 
 TZ = "Asia/Calcutta"
 
@@ -50,3 +51,20 @@ def get_origin_settings():
         settings["allow_origins"] = ALLOWED_ORIGINS
 
     return settings
+
+
+IMG_PATH = "app/images"
+
+CLOUDINARY_URL = os.environ.get("CLOUDINARY_URL")
+CLOUDINARY_OVERRIDE = os.environ.get("CLOUDINARY_OVERRIDE", "false") != "false"
+
+if DEBUG:
+    logging.basicConfig(level=logging.DEBUG)
+    logging.info("DEBUG MODE")
+    if CLOUDINARY_OVERRIDE:
+        logging.warning("CLOUDINARY OVERRIDE is enabled, images uploaded will goto cloudinary")
+else:
+    logging.basicConfig(level=logging.INFO)
+
+if CLOUDINARY_URL is None:
+    logging.warning("Cloudinary not configured, File Upload won't work unless in Debug Mode")
