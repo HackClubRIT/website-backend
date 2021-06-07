@@ -2,7 +2,7 @@
 Common Utils
 """
 from fastapi_mail import MessageSchema
-from app.settings import fastapi_mail_instance
+from app.settings import FASTAPI_MAIL_INSTANCE
 
 
 async def send_email(receivers, subject, body, subtype="html", template=None):
@@ -13,4 +13,4 @@ async def send_email(receivers, subject, body, subtype="html", template=None):
         body=body,
         subtype=subtype
     )
-    await fastapi_mail_instance.send_message(message, template)
+    await FASTAPI_MAIL_INSTANCE.send_message(message, template)

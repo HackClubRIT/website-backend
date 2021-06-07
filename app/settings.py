@@ -30,7 +30,7 @@ _EMAIL_CONF = ConnectionConfig(
     TEMPLATE_FOLDER="./app/emails"
 )
 
-fastapi_mail_instance = FastMail(_EMAIL_CONF)
+FASTAPI_MAIL_INSTANCE = FastMail(_EMAIL_CONF)
 
 TZ = "Asia/Calcutta"
 
@@ -52,6 +52,8 @@ def get_origin_settings():
 
     return settings
 
+
+IMG_PATH = "app/images"
 
 CLOUDINARY_URL = os.environ.get("CLOUDINARY_URL")
 CLOUDINARY_OVERRIDE = os.environ.get("CLOUDINARY_OVERRIDE", "false") != "false"

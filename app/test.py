@@ -9,7 +9,7 @@ from app.database.config_test_db import engine
 from app.main import app
 from app.dependancies import get_test_db, get_db
 from app.users.roles import Roles
-from .settings import fastapi_mail_instance
+from .settings import FASTAPI_MAIL_INSTANCE
 from .users.crud import create_user
 from .users.schemas import UserCreate, User, Token
 
@@ -29,10 +29,10 @@ class FeatureTest:
         app.dependency_overrides[get_db] = get_test_db
 
         # Dont send mail
-        fastapi_mail_instance.config.SUPPRESS_SEND = 1
+        FASTAPI_MAIL_INSTANCE.config.SUPPRESS_SEND = 1
 
         self.client = TestClient(app)
-        self.mail_instance = fastapi_mail_instance
+        self.mail_instance = FASTAPI_MAIL_INSTANCE
         self.users = {}
         self.database_conn = database
         self.default_password = FeatureTest.random_string(randint(8, 20))
