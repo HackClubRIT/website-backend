@@ -60,6 +60,7 @@ def test_create_application(test_feedback_instance: FeedbackTest):
     feedback = FeedbackBase(content=test_feedback_instance.random_string())
     response = test_feedback_instance.client.post(
         "/content/feedback/",
+        headers={"Content-Type": "application/json"},
         data=feedback.json(),
     )
     assert response.status_code == 201
