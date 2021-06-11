@@ -66,12 +66,19 @@ class FeatureTest:
             "PATCH": self.client.patch,
             "POST": self.client.post
         }
+
+        if data:
+            headers = {"Content-Type": "application/json"}
+        else:
+            headers = {}
+
         for user, status_code in users.items():
+            headers.update(self.set_auth_from_user(self.users[user]))
             response = methods[method](
                 url,
                 data=data,
                 json=json_,
-                headers=self.set_auth_from_user(self.users[user])
+                headers=headers
             )
             assert response.status_code == status_code
 
