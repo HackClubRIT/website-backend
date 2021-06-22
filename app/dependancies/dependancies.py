@@ -11,7 +11,7 @@ from app.database.config_test_db import TESTING_SESSION_LOCAL
 from app.users.crud import get_user_by_email
 from app.settings import SECRET_KEY, JWT_HASH_ALGORITHM
 
-oauth2_scheme = OAuth2PasswordBearer(tokenUrl="/auth/token")
+oauth2_scheme = OAuth2PasswordBearer(tokenUrl="/auth/token/")
 
 
 def get_db():
